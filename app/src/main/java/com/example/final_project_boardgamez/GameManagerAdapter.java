@@ -16,6 +16,7 @@ import java.util.Arrays;
 public class GameManagerAdapter extends RecyclerView.Adapter<GameManagerAdapter.GameManagerViewHolder> {
 
     private ArrayList<String> mGameDetails;
+    private ArrayList<String> mGameTags;
     final String[] dummyGameData = {
             "Coup (2012)",
             "Coup (2012)",
@@ -28,8 +29,21 @@ public class GameManagerAdapter extends RecyclerView.Adapter<GameManagerAdapter.
             "Coup (2012)"
     };
 
+    final String[] dummyTagData = {     // TODO: Make 2D array to store tags
+            "Owns, Family friendly",
+            "Wishlist, Party game",
+            "Owns",
+            "Owns",
+            "Has played, Family friendly",
+            "Wishlist",
+            "Has played",
+            "Owns",
+            "Owns"
+    };
+
     public GameManagerAdapter() {
         mGameDetails = new ArrayList<>(Arrays.asList(dummyGameData));
+        mGameTags = new ArrayList<>(Arrays.asList(dummyTagData));
     }
 
     @Override
@@ -42,7 +56,9 @@ public class GameManagerAdapter extends RecyclerView.Adapter<GameManagerAdapter.
     @Override
     public void onBindViewHolder(@NonNull GameManagerViewHolder holder, int position) {
         String gameDetails = mGameDetails.get(position);
+        String gameTag = "Tags: " + mGameTags.get(position);
         holder.mGameDetailsTV.setText(gameDetails);
+        holder.mGameTagTV.setText(gameTag);
         holder.mGameThumbnailIV.setImageResource(R.mipmap.ic_dummy_thumbnail);
         // holder.bind(gameDetails);
     }
@@ -54,11 +70,13 @@ public class GameManagerAdapter extends RecyclerView.Adapter<GameManagerAdapter.
 
     class GameManagerViewHolder extends RecyclerView.ViewHolder {
         private TextView mGameDetailsTV;
+        private TextView mGameTagTV;
         private ImageView mGameThumbnailIV;
 
         public GameManagerViewHolder(@NonNull View itemView) {
             super(itemView);
             mGameDetailsTV = itemView.findViewById(R.id.tv_game_details);
+            mGameTagTV = itemView.findViewById(R.id.tv_game_tag);
             mGameThumbnailIV = itemView.findViewById(R.id.iv_game_image);
         }
 
