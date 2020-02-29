@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- Frame for Main details -->
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+    <!-- Slightly larger than game_list_item -->
+        <ImageView
+            android:id="@+id/iv_game_image"
+            android:padding="8dp"
+            android:layout_width="128dp"
+            android:layout_height="128dp" />
+
+        <!-- Temp data stored in text -->
+        <TextView
+            android:id="@+id/tv_game_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="140dp"
+            android:layout_marginTop="36dp"
+            android:padding="8dp"
+            android:text="Game Title"
+            android:textColor="#000"
+            android:textSize="36sp" />
+    </FrameLayout>
+
+
+    <!-- Frame for smaller details -->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    <!-- Temp data stored in text -->
+    <TextView
+        android:id="@+id/tv_game_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:layout_marginLeft="8dp"
+        android:text="Game Description..."
+        android:textSize="16sp"
+        android:textColor="#000"/>
+
+    <Button
+        android:id="@+id/btn_search"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Edit"
+        android:textSize="20sp"
+        android:layout_gravity="bottom|center"/>
+    </FrameLayout>
+
+
+</LinearLayout>
