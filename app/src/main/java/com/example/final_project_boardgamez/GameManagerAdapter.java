@@ -103,10 +103,9 @@ public class GameManagerAdapter extends RecyclerView.Adapter<GameManagerAdapter.
 
         @Override
         public void onClick(View v) {
+            Log.d(TAG, "In on click");
             //GameInfo game = mGameDetails.get(getAdapterPosition());         // When we are ready for real data
            // mGameClickListener.onGameClicked(game);
-            Log.d(TAG, "In on click");
-
             mGameClickListener.onGameClicked();
         }
 
