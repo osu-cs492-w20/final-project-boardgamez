@@ -1,7 +1,9 @@
 package com.example.final_project_boardgamez;
 
+import android.content.Intent;
 import android.os.Bundle;
 
+import com.example.final_project_boardgamez.GameData.GameInfo;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -10,18 +12,21 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements GameManagerAdapter.OnGameClickListener {
+    private static final String TAG = MainActivity.class.getSimpleName();
 
     private RecyclerView mMainGameListRV;
-    private RecyclerView.Adapter mAdapterRV;
+    private GameManagerAdapter mAdapterRV;                  // Changed to a custom adapter
     private RecyclerView.LayoutManager mLayoutManagerRV;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d(TAG, "Created MainActivity");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -40,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
         mMainGameListRV.setLayoutManager(mLayoutManagerRV);
 
         /* Setup adapter */
-        mAdapterRV = new GameManagerAdapter();
+        mAdapterRV = new GameManagerAdapter(this);
         mMainGameListRV.setAdapter(mAdapterRV);
 
         FloatingActionButton fab = findViewById(R.id.fab);
@@ -51,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+
     }
 
     @Override
@@ -71,7 +77,17 @@ public class MainActivity extends AppCompatActivity {
         if (id == R.id.action_settings) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    //public void onGameClicked(GameInfo game) {                    // When we are ready for real data
+    public void onGameClicked() {
+        Log.d(TAG, "Recognized the click");
+        // Handles games being clicked on in the main activity
+        // Brings the user to the detailed page
+        Intent intent = new Intent(this, GameDetailedActivity.class);
+        //intent.putExtra(GameDetailedActivity.EXTRA_GAME_INFO, game);
+        startActivity(intent);
     }
 }

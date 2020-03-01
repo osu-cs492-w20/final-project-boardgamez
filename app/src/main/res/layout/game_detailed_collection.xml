@@ -41,12 +41,12 @@
         android:layout_height="wrap_content"
         android:padding="8dp"
         android:layout_marginLeft="8dp"
-        android:text="Game Description..."
+        android:text="Game Description... (hardcoded in the layout)"
         android:textSize="16sp"
         android:textColor="#000"/>
 
     <Button
-        android:id="@+id/btn_search"
+        android:id="@+id/btn_edit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Edit"
