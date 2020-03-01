@@ -1,6 +1,7 @@
 package com.example.final_project_boardgamez;
 
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,7 @@ import java.util.Arrays;
 
 public class GameManagerAdapter extends RecyclerView.Adapter<GameManagerAdapter.GameManagerViewHolder> {
 
+    private static final String TAG = GameManagerAdapter.class.getSimpleName();
     private ArrayList<String> mGameDetails;
     private ArrayList<String> mGameTags;
     //private ArrayList<GameInfo> mGameDetails;           // When we are ready for real data
@@ -46,7 +48,7 @@ public class GameManagerAdapter extends RecyclerView.Adapter<GameManagerAdapter.
             "Owns"
     };
 
-    interface OnGameClickListener {
+    public interface OnGameClickListener {
         //void onGameClicked(GameInfo game);
         void onGameClicked();
     }
@@ -85,9 +87,6 @@ public class GameManagerAdapter extends RecyclerView.Adapter<GameManagerAdapter.
     }
 
 
-
-
-
     class GameManagerViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {     // When we are ready for real data
     //class GameManagerViewHolder extends RecyclerView.ViewHolder {
         private TextView mGameDetailsTV;
@@ -99,12 +98,15 @@ public class GameManagerAdapter extends RecyclerView.Adapter<GameManagerAdapter.
             mGameDetailsTV = itemView.findViewById(R.id.tv_game_details);
             mGameTagTV = itemView.findViewById(R.id.tv_game_tag);
             mGameThumbnailIV = itemView.findViewById(R.id.iv_game_image);
+            itemView.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View v) {
             //GameInfo game = mGameDetails.get(getAdapterPosition());         // When we are ready for real data
            // mGameClickListener.onGameClicked(game);
+            Log.d(TAG, "In on click");
+
             mGameClickListener.onGameClicked();
         }
 
