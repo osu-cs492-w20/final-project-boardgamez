@@ -107,7 +107,7 @@ public class MainActivity extends AppCompatActivity implements GameManagerAdapte
 
     private void onFilterSettingsClicked() {
         AlertDialog.Builder mBuilder = new AlertDialog.Builder(MainActivity.this);
-        mBuilder.setTitle("Filters");
+        mBuilder.setTitle("Filter by Tag");
         mBuilder.setMultiChoiceItems(mFilterItems, mCheckedFilters, new DialogInterface.OnMultiChoiceClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int position, boolean isChecked) {
