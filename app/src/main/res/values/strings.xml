@@ -1,4 +1,10 @@
 <resources>
     <string name="app_name">BoardGamez</string>
-    <string name="action_settings">Settings</string>
+    <string name="action_filter">Filter</string>
+
+    <string-array name="filter_list">
+        <item>Owned</item>
+        <item>Wishlist</item>
+        <item>Has Played</item>
+    </string-array>
 </resources>
