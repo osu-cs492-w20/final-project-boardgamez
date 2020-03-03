@@ -1,6 +1,7 @@
 package com.example.final_project_boardgamez;
 
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,13 +11,19 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.final_project_boardgamez.GameData.GameInfo;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 
 public class GameManagerAdapter extends RecyclerView.Adapter<GameManagerAdapter.GameManagerViewHolder> {
 
+    private static final String TAG = GameManagerAdapter.class.getSimpleName();
     private ArrayList<String> mGameDetails;
     private ArrayList<String> mGameTags;
+    //private ArrayList<GameInfo> mGameDetails;           // When we are ready for real data
+    private OnGameClickListener mGameClickListener;
+
     final String[] dummyGameData = {
             "Coup (2012)",
             "Coup (2012)",
@@ -41,13 +48,29 @@ public class GameManagerAdapter extends RecyclerView.Adapter<GameManagerAdapter.
             "Owns"
     };
 
-    public GameManagerAdapter() {
+    public interface OnGameClickListener {
+        //void onGameClicked(GameInfo game);
+        void onGameClicked();
+    }
+
+    public GameManagerAdapter(OnGameClickListener listener) {
+        mGameClickListener = listener;
         mGameDetails = new ArrayList<>(Arrays.asList(dummyGameData));
         mGameTags = new ArrayList<>(Arrays.asList(dummyTagData));
     }
 
+//    public void updateGameCollection(ArrayList<GameInfo> gameList) {          // When we are ready for real data
+//        mGameDetails = gameList;
+//        notifyDataSetChanged();
+//    }
+
     @Override
-    public GameManagerAdapter.GameManagerViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public int getItemCount() {
+        return dummyGameData.length;
+    }
+
+    @Override
+    public GameManagerViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View itemView = inflater.inflate(R.layout.game_list_item, parent, false);
         return new GameManagerViewHolder(itemView);
@@ -63,12 +86,9 @@ public class GameManagerAdapter extends RecyclerView.Adapter<GameManagerAdapter.
         // holder.bind(gameDetails);
     }
 
-    @Override
-    public int getItemCount() {
-        return dummyGameData.length;
-    }
 
-    class GameManagerViewHolder extends RecyclerView.ViewHolder {
+    class GameManagerViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {     // When we are ready for real data
+    //class GameManagerViewHolder extends RecyclerView.ViewHolder {
         private TextView mGameDetailsTV;
         private TextView mGameTagTV;
         private ImageView mGameThumbnailIV;
@@ -78,6 +98,15 @@ public class GameManagerAdapter extends RecyclerView.Adapter<GameManagerAdapter.
             mGameDetailsTV = itemView.findViewById(R.id.tv_game_details);
             mGameTagTV = itemView.findViewById(R.id.tv_game_tag);
             mGameThumbnailIV = itemView.findViewById(R.id.iv_game_image);
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            Log.d(TAG, "In on click");
+            //GameInfo game = mGameDetails.get(getAdapterPosition());         // When we are ready for real data
+           // mGameClickListener.onGameClicked(game);
+            mGameClickListener.onGameClicked();
         }
 
         void bind(String gameDetailsText) {
