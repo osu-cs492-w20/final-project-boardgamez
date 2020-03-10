@@ -10,6 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.final_project_boardgamez.GameData.GameInfo;
 
 import java.util.ArrayList;
@@ -78,10 +79,10 @@ public class GameManagerAdapter extends RecyclerView.Adapter<GameManagerAdapter.
         String gameTag = "Tags: " + mGameTags.get(position);
         Log.d(TAG, "Adapter: Bind Game Name = " + gameDetails.name);
 
-        holder.mGameDetailsTV.setText(gameDetails.name);
-        holder.mGameTagTV.setText(gameTag);
-        holder.mGameThumbnailIV.setImageResource(R.mipmap.ic_dummy_thumbnail);          // Still Hardcoded Image
-        // holder.bind(gameDetails);
+        //holder.mGameDetailsTV.setText(gameDetails.name);
+        //holder.mGameTagTV.setText(gameTag);
+        //holder.mGameThumbnailIV.setImageResource(R.mipmap.ic_dummy_thumbnail);          // Still Hardcoded Image
+        holder.bind(gameDetails, gameTag);
     }
 
 
@@ -105,8 +106,14 @@ public class GameManagerAdapter extends RecyclerView.Adapter<GameManagerAdapter.
             mGameClickListener.onGameClicked(game);
         }
 
-        void bind(String gameDetailsText) {
-            mGameDetailsTV.setText(gameDetailsText);
+        void bind(GameInfo gameInfo, String gameTag) {
+            mGameDetailsTV.setText(gameInfo.name);
+            mGameTagTV.setText(gameTag);
+          //  mGameThumbnailIV.setImageResource(R.mipmap.ic_dummy_thumbnail);          // Still Hardcoded Image
+
+            String thumbnail = "https://cf.geekdo-images.com/thumb/img/zm7yYkwNagKXipKe3h_Va0EDp_k=/fit-in/200x150/pic119215.jpg";
+            Glide.with(mGameThumbnailIV.getContext())
+                    .load(thumbnail).into(mGameThumbnailIV);
         }
     }
 }
