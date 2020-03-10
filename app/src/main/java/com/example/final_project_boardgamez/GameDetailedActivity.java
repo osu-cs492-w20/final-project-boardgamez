@@ -42,6 +42,7 @@ public class GameDetailedActivity extends AppCompatActivity {
             gameDescriptionTV.setText(mGame.description);
 
         }
+
     }
 
 

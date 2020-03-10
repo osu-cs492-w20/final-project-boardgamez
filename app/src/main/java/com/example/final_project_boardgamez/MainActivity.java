@@ -49,10 +49,42 @@ public class MainActivity extends AppCompatActivity implements GameManagerAdapte
         mAdapterRV = new GameManagerAdapter(this);
         mMainGameListRV.setAdapter(mAdapterRV);
 
+
+        // Adding a Game to the RV      //TODO: Just Hard coding for testings
+        GameInfo game = new GameInfo();
+        game.name = "Settlers of Catan";
+        game.description = "HARDCODED: In Catan (formerly The Settlers of Catan), players try to be the dominant force on the island of Catan by building settlements, cities, and roads.";
+        game.age = 10;
+        game.yearpublished = 1995;
+        game.minplayers = 3;
+        game.maxplayers = 4;
+        game.playingtime = 60;
+        mAdapterRV.addGame(game);
+
+        Log.d(TAG, "Main: Adapter is size: " + mAdapterRV.getItemCount());
+
+
+
         Button fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+
+                // Adding a Game to the RV      //TODO: Needs to Store Permanently
+                GameInfo game = new GameInfo();
+                game.name = "Coup";
+                game.description = "This is a random game description hardcoded in the Main Activity on Create";
+                game.age = 5;
+                game.yearpublished = 1998;
+                game.minplayers = 2;
+                game.maxplayers = 12;
+                game.playingtime = 30;
+                mAdapterRV.addGame(game);
+
+                //Log.d(TAG, "Main: Adapter is size: " + mAdapterRV.getItemCount());
+
+
 
             }
         });
@@ -81,13 +113,12 @@ public class MainActivity extends AppCompatActivity implements GameManagerAdapte
     }
 
     @Override
-    //public void onGameClicked(GameInfo game) {                    // When we are ready for real data
-    public void onGameClicked() {
-        Log.d(TAG, "Recognized the click");
+    public void onGameClicked(GameInfo game) {          // Passes the whole game item
+        Log.d(TAG, "Main: Recognized the game click");
         // Handles games being clicked on in the main activity
         // Brings the user to the detailed page
         Intent intent = new Intent(this, GameDetailedActivity.class);
-        //intent.putExtra(GameDetailedActivity.EXTRA_GAME_INFO, game);
+        intent.putExtra(GameDetailedActivity.EXTRA_GAME_INFO, game);
         startActivity(intent);
     }
 }
