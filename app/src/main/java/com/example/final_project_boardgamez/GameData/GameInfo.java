@@ -11,4 +11,5 @@ public class GameInfo implements Serializable {
 
     public String name;
     public String description;
+    public String thumbnail;
 }
