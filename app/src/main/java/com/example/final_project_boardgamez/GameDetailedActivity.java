@@ -9,13 +9,13 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.final_project_boardgamez.GameData.GameInfo;
+import com.example.final_project_boardgamez.GameData.Game;
 
 public class GameDetailedActivity extends AppCompatActivity {
-    public static final String EXTRA_GAME_INFO = "GameInfo";
+    public static final String EXTRA_GAME_INFO = "Game";
     private static final String TAG = GameDetailedActivity.class.getSimpleName();
 
-    private GameInfo mGame;
+    private Game mGame;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +33,7 @@ public class GameDetailedActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         if (intent != null && intent.hasExtra(EXTRA_GAME_INFO)) {
-            mGame = (GameInfo) intent.getSerializableExtra(EXTRA_GAME_INFO);
+            mGame = (Game) intent.getSerializableExtra(EXTRA_GAME_INFO);
 
             TextView gameTitleTV = findViewById(R.id.tv_game_title);
             gameTitleTV.setText(mGame.name);
