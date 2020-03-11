@@ -11,15 +11,16 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.example.final_project_boardgamez.GameData.GameInfo;
+import com.example.final_project_boardgamez.GameData.Game;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class GameManagerAdapter extends RecyclerView.Adapter<GameManagerAdapter.GameManagerViewHolder> {
 
     private static final String TAG = GameManagerAdapter.class.getSimpleName();
-    private ArrayList<GameInfo> mGameDetails;
+    private List<Game> mGameDetails;
     private ArrayList<String> mGameTags;
     private OnGameClickListener mGameClickListener;
 
@@ -39,7 +40,7 @@ public class GameManagerAdapter extends RecyclerView.Adapter<GameManagerAdapter.
 
 
     public interface OnGameClickListener {
-        void onGameClicked(GameInfo game);
+        void onGameClicked(Game game);
     }
 
     public GameManagerAdapter(OnGameClickListener listener) {
@@ -49,13 +50,13 @@ public class GameManagerAdapter extends RecyclerView.Adapter<GameManagerAdapter.
         Log.d(TAG, "Adapter: Created an ArrayList");
     }
 
-    public void addGame(GameInfo game) {
+    public void addGame(Game game) {
         Log.d(TAG, "Adapter: Adding Game to ArrayList");
         mGameDetails.add(game);
         notifyDataSetChanged();
     }
 
-    public void updateGameCollection(ArrayList<GameInfo> gameList) {
+    public void updateGameCollection(List<Game> gameList) {
         Log.d(TAG, "Adapter: Updating whole ArrayList with another list");
         mGameDetails = gameList;
         notifyDataSetChanged();
@@ -75,8 +76,9 @@ public class GameManagerAdapter extends RecyclerView.Adapter<GameManagerAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull GameManagerViewHolder holder, int position) {
-        GameInfo gameDetails = mGameDetails.get(position);
-        String gameTag = "Tags: " + mGameTags.get(position);
+        Game gameDetails = mGameDetails.get(position);
+        //String gameTag = "Tags: " + mGameTags.get(position);
+        String gameTag = gameDetails.description;
         Log.d(TAG, "Adapter: Bind Game Name = " + gameDetails.name);
 
         //holder.mGameDetailsTV.setText(gameDetails.name);
@@ -102,12 +104,12 @@ public class GameManagerAdapter extends RecyclerView.Adapter<GameManagerAdapter.
         @Override
         public void onClick(View v) {
             Log.d(TAG, "In on click");
-            GameInfo game = mGameDetails.get(getAdapterPosition());         // When we are ready for real data
+            Game game = mGameDetails.get(getAdapterPosition());         // When we are ready for real data
             mGameClickListener.onGameClicked(game);
         }
 
-        void bind(GameInfo gameInfo, String gameTag) {
-            mGameDetailsTV.setText(gameInfo.name);
+        void bind(Game game, String gameTag) {
+            mGameDetailsTV.setText(game.name);
             mGameTagTV.setText(gameTag);
           //  mGameThumbnailIV.setImageResource(R.mipmap.ic_dummy_thumbnail);          // Still Hardcoded Image
 

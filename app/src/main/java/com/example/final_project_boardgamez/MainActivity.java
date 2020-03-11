@@ -3,9 +3,7 @@ package com.example.final_project_boardgamez;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.example.final_project_boardgamez.GameData.GameInfo;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
+import com.example.final_project_boardgamez.GameData.Game;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -51,14 +49,14 @@ public class MainActivity extends AppCompatActivity implements GameManagerAdapte
 
 
         // Adding a Game to the RV      //TODO: Just Hard coding for testings
-        GameInfo game = new GameInfo();
+        Game game = new Game();
         game.name = "Settlers of Catan";
         game.description = "HARDCODED: In Catan (formerly The Settlers of Catan), players try to be the dominant force on the island of Catan by building settlements, cities, and roads.";
-        game.age = 10;
-        game.yearpublished = 1995;
-        game.minplayers = 3;
-        game.maxplayers = 4;
-        game.playingtime = 60;
+        game.min_age = 10;
+        game.year_published = 1995;
+        game.min_players = 3;
+        game.max_players = 4;
+        game.min_playtime = 60;
         mAdapterRV.addGame(game);
 
         Log.d(TAG, "Main: Adapter is size: " + mAdapterRV.getItemCount());
@@ -70,17 +68,20 @@ public class MainActivity extends AppCompatActivity implements GameManagerAdapte
             @Override
             public void onClick(View view) {
 
+                Intent intent = new Intent(getApplicationContext(), SearchActivity.class);
+                startActivity(intent);
+
 
                 // Adding a Game to the RV      //TODO: Needs to Store Permanently
-                GameInfo game = new GameInfo();
+                /*Game game = new Game();
                 game.name = "Coup";
                 game.description = "This is a random game description hardcoded in the Main Activity on Create";
-                game.age = 5;
-                game.yearpublished = 1998;
-                game.minplayers = 2;
-                game.maxplayers = 12;
-                game.playingtime = 30;
-                mAdapterRV.addGame(game);
+                game.min_age = 5;
+                game.year_published = 1998;
+                game.min_players = 2;
+                game.max_players = 12;
+                game.min_playtime = 30;
+                mAdapterRV.addGame(game);*/
 
                 //Log.d(TAG, "Main: Adapter is size: " + mAdapterRV.getItemCount());
 
@@ -113,7 +114,7 @@ public class MainActivity extends AppCompatActivity implements GameManagerAdapte
     }
 
     @Override
-    public void onGameClicked(GameInfo game) {          // Passes the whole game item
+    public void onGameClicked(Game game) {          // Passes the whole game item
         Log.d(TAG, "Main: Recognized the game click");
         // Handles games being clicked on in the main activity
         // Brings the user to the detailed page
