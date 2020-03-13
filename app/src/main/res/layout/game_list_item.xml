@@ -22,17 +22,19 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/tv_game_details"
+                android:id="@+id/tv_game_item_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="8dp"
                 android:textSize="20sp"
                 android:textColor="@color/colorPrimaryText"/>
             <TextView
-                android:id="@+id/tv_game_tag"
+                android:id="@+id/tv_game_item_details"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="8dp"
+                android:ellipsize="end"
+                android:maxLines="3"
                 android:textSize="16sp"
                 android:textStyle="italic"
                 android:textColor="@color/colorSecondaryText"/>
