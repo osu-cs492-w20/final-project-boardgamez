@@ -21,21 +21,21 @@ public class GameManagerAdapter extends RecyclerView.Adapter<GameManagerAdapter.
 
     private static final String TAG = GameManagerAdapter.class.getSimpleName();
     private List<Game> mGameDetails;
-    private ArrayList<String> mGameTags;
+   // private ArrayList<String> mGameTags;
     private OnGameClickListener mGameClickListener;
 
 
-    final String[] dummyTagData = {     // TODO: Make 2D array to store tags
-            "Owns, Family friendly",
+   /* final String[] dummyTagData = {     // TODO: Make 2D array to store tags
+            "Owns",
             "Wishlist, Party game",
             "Owns",
-            "Owns",
+            "",
             "Has played, Family friendly",
             "Wishlist",
             "Has played",
-            "Owns",
+            "",
             "Owns"
-    };                          // Game Crashes if you add more than these 9 Game Tags
+    };    */                      // Game Crashes if you add more than these 9 Game Tags
 
 
 
@@ -46,7 +46,7 @@ public class GameManagerAdapter extends RecyclerView.Adapter<GameManagerAdapter.
     public GameManagerAdapter(OnGameClickListener listener) {
         mGameClickListener = listener;
         mGameDetails = new ArrayList<>();
-        mGameTags = new ArrayList<>(Arrays.asList(dummyTagData));
+      //  mGameTags = new ArrayList<>(Arrays.asList(dummyTagData));
         Log.d(TAG, "Adapter: Created an ArrayList");
     }
 
@@ -77,8 +77,11 @@ public class GameManagerAdapter extends RecyclerView.Adapter<GameManagerAdapter.
     @Override
     public void onBindViewHolder(@NonNull GameManagerViewHolder holder, int position) {
         Game gameDetails = mGameDetails.get(position);
-        //String gameTag = "Tags: " + mGameTags.get(position);
-        String gameTag = gameDetails.description;
+        String gameTag = "";
+        if (gameDetails.game_tag != null) {
+            gameTag = "Tags: " + gameDetails.game_tag;
+        }
+        // String gameTag = gameDetails.description;
         Log.d(TAG, "Adapter: Bind Game Name = " + gameDetails.name);
 
         //holder.mGameDetailsTV.setText(gameDetails.name);
@@ -90,13 +93,13 @@ public class GameManagerAdapter extends RecyclerView.Adapter<GameManagerAdapter.
 
     class GameManagerViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private TextView mGameDetailsTV;
-        private TextView mGameTagTV;
+        private TextView mGameTitleTV;
         private ImageView mGameThumbnailIV;
 
         public GameManagerViewHolder(@NonNull View itemView) {
             super(itemView);
-            mGameDetailsTV = itemView.findViewById(R.id.tv_game_details);
-            mGameTagTV = itemView.findViewById(R.id.tv_game_tag);
+            mGameDetailsTV = itemView.findViewById(R.id.tv_game_item_details);
+            mGameTitleTV = itemView.findViewById(R.id.tv_game_item_title);
             mGameThumbnailIV = itemView.findViewById(R.id.iv_game_image);
             itemView.setOnClickListener(this);
         }
@@ -109,11 +112,13 @@ public class GameManagerAdapter extends RecyclerView.Adapter<GameManagerAdapter.
         }
 
         void bind(Game game, String gameTag) {
-            mGameDetailsTV.setText(game.name);
-            mGameTagTV.setText(gameTag);
-          //  mGameThumbnailIV.setImageResource(R.mipmap.ic_dummy_thumbnail);          // Still Hardcoded Image
+            mGameDetailsTV.setText((game.description).trim());  // Remove any leading or trailing whitespace from game description
+            mGameTitleTV.setText(game.name);
+            if (gameTag != "") {
+                mGameDetailsTV.setText(gameTag);
+            }
 
-            String thumbnail = "https://cf.geekdo-images.com/thumb/img/zm7yYkwNagKXipKe3h_Va0EDp_k=/fit-in/200x150/pic119215.jpg";
+            String thumbnail = game.image_url;
             Glide.with(mGameThumbnailIV.getContext())
                     .load(thumbnail).into(mGameThumbnailIV);
         }
