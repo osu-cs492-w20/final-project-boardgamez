@@ -13,4 +13,5 @@ public class Game implements Serializable {
     public String name;
     public String description;
     public String image_url;
+    public String game_tag;
 }
