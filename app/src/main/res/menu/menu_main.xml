@@ -5,9 +5,9 @@
     tools:context="com.example.final_project_boardgamez.MainActivity">
     -->
     <item
-        android:id="@+id/action_settings"
+        android:id="@+id/action_filter"
         android:icon="@drawable/ic_filter_list"
         android:orderInCategory="1"
-        android:title="@string/action_settings"
+        android:title="@string/action_filter"
         app:showAsAction="ifRoom" />
 </menu>
