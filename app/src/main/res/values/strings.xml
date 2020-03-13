@@ -1,10 +1,15 @@
 <resources>
     <string name="app_name">BoardGamez</string>
     <string name="action_filter">Filter</string>
+    <string name="action_settings">Settings</string>
+    <string name="search_field_hint_text">Search for a game...</string>
+    <string name="search_btn_text">Search</string>
 
+    <!--TODO: Find dynamic approach for listing filter names-->
     <string-array name="filter_list">
         <item>Owned</item>
         <item>Wishlist</item>
         <item>Has Played</item>
     </string-array>
+
 </resources>

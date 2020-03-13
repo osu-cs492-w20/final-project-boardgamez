@@ -1,6 +1,5 @@
 package com.example.final_project_boardgamez;
 
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,30 +10,20 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.final_project_boardgamez.GameData.GameInfo;
+import com.bumptech.glide.Glide;
+import com.example.final_project_boardgamez.GameData.Game;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class GameManagerAdapter extends RecyclerView.Adapter<GameManagerAdapter.GameManagerViewHolder> {
 
     private static final String TAG = GameManagerAdapter.class.getSimpleName();
-    private ArrayList<String> mGameDetails;
+    private List<Game> mGameDetails;
     private ArrayList<String> mGameTags;
-    //private ArrayList<GameInfo> mGameDetails;           // When we are ready for real data
     private OnGameClickListener mGameClickListener;
 
-    final String[] dummyGameData = {
-            "Coup (2012)",
-            "Coup (2012)",
-            "Coup (2012)",
-            "Coup (2012)",
-            "Coup (2012)",
-            "Coup (2012)",
-            "Coup (2012)",
-            "Coup (2012)",
-            "Coup (2012)"
-    };
 
     final String[] dummyTagData = {     // TODO: Make 2D array to store tags
             "Owns, Family friendly",
@@ -46,27 +35,36 @@ public class GameManagerAdapter extends RecyclerView.Adapter<GameManagerAdapter.
             "Has played",
             "Owns",
             "Owns"
-    };
+    };                          // Game Crashes if you add more than these 9 Game Tags
+
+
 
     public interface OnGameClickListener {
-        //void onGameClicked(GameInfo game);
-        void onGameClicked();
+        void onGameClicked(Game game);
     }
 
     public GameManagerAdapter(OnGameClickListener listener) {
         mGameClickListener = listener;
-        mGameDetails = new ArrayList<>(Arrays.asList(dummyGameData));
+        mGameDetails = new ArrayList<>();
         mGameTags = new ArrayList<>(Arrays.asList(dummyTagData));
+        Log.d(TAG, "Adapter: Created an ArrayList");
     }
 
-//    public void updateGameCollection(ArrayList<GameInfo> gameList) {          // When we are ready for real data
-//        mGameDetails = gameList;
-//        notifyDataSetChanged();
-//    }
+    public void addGame(Game game) {
+        Log.d(TAG, "Adapter: Adding Game to ArrayList");
+        mGameDetails.add(game);
+        notifyDataSetChanged();
+    }
+
+    public void updateGameCollection(List<Game> gameList) {
+        Log.d(TAG, "Adapter: Updating whole ArrayList with another list");
+        mGameDetails = gameList;
+        notifyDataSetChanged();
+    }
 
     @Override
     public int getItemCount() {
-        return dummyGameData.length;
+        return mGameDetails.size();
     }
 
     @Override
@@ -78,17 +76,19 @@ public class GameManagerAdapter extends RecyclerView.Adapter<GameManagerAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull GameManagerViewHolder holder, int position) {
-        String gameDetails = mGameDetails.get(position);
-        String gameTag = "Tags: " + mGameTags.get(position);
-        holder.mGameDetailsTV.setText(gameDetails);
-        holder.mGameTagTV.setText(gameTag);
-        holder.mGameThumbnailIV.setImageResource(R.mipmap.ic_dummy_thumbnail);
-        // holder.bind(gameDetails);
+        Game gameDetails = mGameDetails.get(position);
+        //String gameTag = "Tags: " + mGameTags.get(position);
+        String gameTag = gameDetails.description;
+        Log.d(TAG, "Adapter: Bind Game Name = " + gameDetails.name);
+
+        //holder.mGameDetailsTV.setText(gameDetails.name);
+        //holder.mGameTagTV.setText(gameTag);
+        //holder.mGameThumbnailIV.setImageResource(R.mipmap.ic_dummy_thumbnail);          // Still Hardcoded Image
+        holder.bind(gameDetails, gameTag);
     }
 
 
-    class GameManagerViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {     // When we are ready for real data
-    //class GameManagerViewHolder extends RecyclerView.ViewHolder {
+    class GameManagerViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private TextView mGameDetailsTV;
         private TextView mGameTagTV;
         private ImageView mGameThumbnailIV;
@@ -103,15 +103,19 @@ public class GameManagerAdapter extends RecyclerView.Adapter<GameManagerAdapter.
 
         @Override
         public void onClick(View v) {
-            //GameInfo game = mGameDetails.get(getAdapterPosition());         // When we are ready for real data
-           // mGameClickListener.onGameClicked(game);
             Log.d(TAG, "In on click");
-
-            mGameClickListener.onGameClicked();
+            Game game = mGameDetails.get(getAdapterPosition());         // When we are ready for real data
+            mGameClickListener.onGameClicked(game);
         }
 
-        void bind(String gameDetailsText) {
-            mGameDetailsTV.setText(gameDetailsText);
+        void bind(Game game, String gameTag) {
+            mGameDetailsTV.setText(game.name);
+            mGameTagTV.setText(gameTag);
+          //  mGameThumbnailIV.setImageResource(R.mipmap.ic_dummy_thumbnail);          // Still Hardcoded Image
+
+            String thumbnail = "https://cf.geekdo-images.com/thumb/img/zm7yYkwNagKXipKe3h_Va0EDp_k=/fit-in/200x150/pic119215.jpg";
+            Glide.with(mGameThumbnailIV.getContext())
+                    .load(thumbnail).into(mGameThumbnailIV);
         }
     }
 }
