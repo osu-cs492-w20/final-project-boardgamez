@@ -20,6 +20,6 @@ public interface SavedGamesDao {
     LiveData<List<Game>> getAllSavedGames();
 
     @Query("SELECT * FROM games WHERE name = :gameName LIMIT 1")
-    Game getGameByName(String gameName);
+    LiveData<Game> getGameByName(String gameName);
 
 }

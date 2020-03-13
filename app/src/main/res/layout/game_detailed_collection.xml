@@ -46,6 +46,15 @@
         android:textColor="#000"/>
 
     <Button
+        android:id="@+id/btn_add"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Add to Collection"
+        android:textSize="20sp"
+        android:layout_marginBottom="60dp"
+        android:layout_gravity="bottom|center"/>
+
+    <Button
         android:id="@+id/btn_edit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

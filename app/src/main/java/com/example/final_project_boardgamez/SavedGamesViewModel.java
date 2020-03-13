@@ -30,7 +30,7 @@ public class SavedGamesViewModel extends AndroidViewModel {
         return mSavedGamesRepository.getAllSavedGames();
     }
 
-    public Game getSavedGameByName(String gameName) {
+    public LiveData<Game> getSavedGameByName(String gameName) {
         return mSavedGamesRepository.getSavedGameByName(gameName);
     }
 }

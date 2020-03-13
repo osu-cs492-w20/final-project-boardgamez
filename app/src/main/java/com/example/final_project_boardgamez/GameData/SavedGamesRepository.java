@@ -27,31 +27,20 @@ public class SavedGamesRepository {
         new DeleteAsyncTask(mSavedGamesDao).execute(game);
     }
 
-    public Game getSavedGameByName(String name) {
-        Game game = new Game();
+    public LiveData<Game> getSavedGameByName(String name) {
+      /*  LiveData<Game> game;
         try {
-            game = new GetGameByNameAsyncTask(mSavedGamesDao).execute(name).get();
+            game = new GetGameByNameAsyncTask(mSavedGamesDao).execute(name);
         } catch (Exception e) {
             e.printStackTrace();
-        }
-        return game;
+        }*/
+        return mSavedGamesDao.getGameByName(name);
     }
 
     public LiveData<List<Game>> getAllSavedGames() {
         return mSavedGamesDao.getAllSavedGames();
     }
 
-    private static class GetGameByNameAsyncTask extends AsyncTask<String, Void, Game> {
-        private SavedGamesDao nAsyncTaskDao;
-        GetGameByNameAsyncTask(SavedGamesDao savedGamesDao) {
-            nAsyncTaskDao = savedGamesDao;
-        }
-
-        @Override
-        protected Game doInBackground(String... strings) {
-            return nAsyncTaskDao.getGameByName(strings[0]);
-        }
-    }
 
     private static class InsertAsyncTask extends AsyncTask<Game, Void, Void> {
         private SavedGamesDao mAsyncTaskDao;
