@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity implements GameManagerAdapte
     private RecyclerView.LayoutManager mLayoutManagerRV;
     private TextView mAppliedFiltersTV;
     private String[] mFilterItems;
-    boolean[] mCheckedFilters;
+    private boolean[] mCheckedFilters;
     ArrayList<Integer> mSelectedFilters = new ArrayList<>();
 
     @Override
