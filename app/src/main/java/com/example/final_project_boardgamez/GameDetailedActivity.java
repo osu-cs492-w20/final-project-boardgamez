@@ -49,16 +49,30 @@ public class GameDetailedActivity extends AppCompatActivity {
             Glide.with(mGameIV.getContext()).load(mGame.image_url).into(mGameIV);
 
             TextView gamePlayersTV = findViewById(R.id.tv_game_players);
-            gamePlayersTV.setText("Players: " + mGame.min_players + " - " + mGame.max_players);
+            if (mGame.min_players == 0 || mGame.max_players == 0) {
+                gamePlayersTV.setText("Players: N/A");
+            } else if (mGame.min_players == mGame.max_players) {
+                gamePlayersTV.setText("Players: " + mGame.min_players);
+            } else {
+                gamePlayersTV.setText("Players: " + mGame.min_players + " - " + mGame.max_players);
+            }
 
             TextView gameTimeTV = findViewById(R.id.tv_game_playtime);
-            gameTimeTV.setText("Playtime: " + mGame.min_playtime + " - " + mGame.max_playtime + " minutes");
+            if (mGame.max_playtime == 0) {
+                gameTimeTV.setText("Playtime: N/A");
+            } else if (mGame.min_playtime == mGame.max_playtime) {
+                gameTimeTV.setText("Playtime: " + mGame.min_playtime + " minutes");
+            } else {
+                gameTimeTV.setText("Playtime: " + mGame.min_playtime + " - " + mGame.max_playtime + " minutes");
+            }
 
             TextView gameMinAgeTV = findViewById(R.id.tv_game_min_age);
-            gameMinAgeTV.setText("Minimum age: " + mGame.min_age);
+            String minAge = mGame.min_age == 0 ? "N/A" : Integer.toString(mGame.min_age);
+            gameMinAgeTV.setText("Minimum age: " + minAge);
 
             TextView gameYearPublishedTV = findViewById(R.id.tv_game_year_published);
-            gameYearPublishedTV.setText("Year published: " + mGame.year_published);
+            String yearPublished = mGame.year_published == 0 ? "N/A" : Integer.toString(mGame.year_published);
+            gameYearPublishedTV.setText("Year published: " + yearPublished);
 
             TextView gameDescriptionTV = findViewById(R.id.tv_game_description);
             gameDescriptionTV.setText(mGame.description);
