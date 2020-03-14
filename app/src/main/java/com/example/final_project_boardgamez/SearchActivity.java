@@ -12,8 +12,10 @@ import android.widget.TextView;
 import com.example.final_project_boardgamez.GameData.Game;
 import com.example.final_project_boardgamez.GameData.Status;
 
+import java.io.Serializable;
 import java.util.List;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -31,9 +33,13 @@ public class SearchActivity extends AppCompatActivity implements GameManagerAdap
     private EditText mSearchField;
     private Button mSearchButton;
 
+    private List mSearchResultsList;
+    private static final String SEARCH_RESULTS_KEY = "searchResults";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(TAG, "SearchActivity: CREATING... ");
         setContentView(R.layout.activity_search);
 
         mGamesViewModel = new GamesViewModel();
@@ -41,12 +47,22 @@ public class SearchActivity extends AppCompatActivity implements GameManagerAdap
         mGamesRV = findViewById(R.id.rv_search);
         mSearchField = findViewById(R.id.et_search_field);
         mSearchButton = findViewById(R.id.btn_search_button);
-    //    mLoadingError = findViewById(R.id.tv_loading_error);
-     //   mLoadingIndicator = findViewById(R.id.pb_loading_indicator);
+        //mLoadingError = findViewById(R.id.tv_loading_error);
+        //mLoadingIndicator = findViewById(R.id.pb_loading_indicator);
 
         mGamesRV.setAdapter(mGameAdapter);
         mGamesRV.setLayoutManager(new LinearLayoutManager(this));
         mGamesRV.setHasFixedSize(true);
+
+        if (savedInstanceState != null &&
+                savedInstanceState.containsKey(SEARCH_RESULTS_KEY)) {
+            mSearchResultsList = (List)savedInstanceState.getSerializable(
+                    SEARCH_RESULTS_KEY
+            );
+            if(mSearchResultsList != null){
+                mGameAdapter.updateGameCollection(mSearchResultsList);
+            }
+        }
 
         mSearchButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,7 +73,8 @@ public class SearchActivity extends AppCompatActivity implements GameManagerAdap
                     @Override
                     public void onChanged(List<Game> games) {
                         if (games != null) {
-                            Log.d(TAG, "first game in list: " + games.get(0).name);
+                            mSearchResultsList = games;
+                            Log.d(TAG, "First game in list: " + games.get(0).name);
                             mGameAdapter.updateGameCollection(games);
                         }
                     }
@@ -83,6 +100,46 @@ public class SearchActivity extends AppCompatActivity implements GameManagerAdap
             }
         });*/
     }
+
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.d(TAG, "SearchActivity: STARTING... ");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d(TAG, "SearchActivity: RESUMING... ");
+        if(mSearchResultsList != null){
+            mGameAdapter.updateGameCollection(mSearchResultsList);
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d(TAG, "SearchActivity: STOPPING... ");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG, "SearchActivity: DESTROYING...");
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        Log.d(TAG, "onSaveInstanceState()");
+
+        if (mSearchResultsList != null) {
+            outState.putSerializable(SEARCH_RESULTS_KEY,
+                    (Serializable) mSearchResultsList);
+        }
+    }
+
 
     @Override
     public void onGameClicked(Game game) {
