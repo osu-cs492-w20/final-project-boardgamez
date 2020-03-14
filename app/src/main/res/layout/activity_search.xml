@@ -18,8 +18,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="22sp"
-        android:textColor="@color/colorPrimaryText"
-        android:background="@color/colorAccentLight"
+        android:textColor="@color/colorTextIcons"
+        android:background="@color/colorPrimary"
         android:text="@string/search_btn_text">
     </Button>
 
