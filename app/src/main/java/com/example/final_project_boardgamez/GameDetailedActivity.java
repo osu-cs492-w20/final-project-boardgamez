@@ -32,6 +32,7 @@ public class GameDetailedActivity extends AppCompatActivity {
 
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle("Game Details");
 
         mSavedGamesViewModel = new ViewModelProvider(
                 this,
