@@ -3,17 +3,27 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <EditText
-        android:id="@+id/et_search_field"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="24sp"
-        android:textColor="@color/colorPrimaryText"
-        android:hint="@string/search_field_hint_text">
+        <ImageButton
+            android:id="@+id/ib_scan_barcode"
+            android:src="@drawable/ic_filter_list"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:tint="@color/colorPrimaryText"
+            android:layout_alignParentRight="true" />
 
-    </EditText>
+        <EditText
+            android:id="@+id/et_search_field"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="24sp"
+            android:textColor="@color/colorPrimaryText"
+            android:imeOptions="actionSearch"
+            android:inputType="text"
+            android:hint="@string/search_field_hint_text">
 
-    <Button
+        </EditText>
+
+  <!--  <Button
         android:id="@+id/btn_search_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -21,7 +31,7 @@
         android:textColor="@color/colorTextIcons"
         android:background="@color/colorPrimary"
         android:text="@string/search_btn_text">
-    </Button>
+    </Button>-->
 
     <!--<TextView
         android:id="@+id/tv_loading_error"
