@@ -1,5 +1,6 @@
 package com.example.final_project_boardgamez;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,7 +10,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -101,31 +104,47 @@ public class GameDetailedActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_detailed, menu);
         mMenu = menu;
+
+        // Show add button or delete button based on whether current game is already saved.
         if (mGameIsSaved) {
             mMenu.findItem(R.id.action_remove).setVisible(true);
         } else {
             mMenu.findItem(R.id.action_add).setVisible(true);
         }
 
-        mMenu.findItem(R.id.action_remove).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+        // Setup click listeners for the add and remove buttons.
+        mMenu.findItem(R.id.action_remove).getActionView().setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onMenuItemClick(MenuItem menuItem) {
+            public void onClick(View view) {
                 Log.d(TAG, "Clicked remove button");
                 if (mGame != null) {
                     if (mGameIsSaved) {
-                        mSavedGamesViewModel.deleteSavedGame(mGame);
-                        mGameIsSaved = !mGameIsSaved;
-                        mMenu.findItem(R.id.action_remove).setVisible(false);
-                        mMenu.findItem(R.id.action_add).setVisible(true);
+                        // Create a dialog box to check if the user is sure they want to remove the game.
+                        new AlertDialog.Builder(GameDetailedActivity.this)
+                                .setTitle("Remove Game")
+                                .setMessage("Are you sure you want to remove this game from your collection?")
+                                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        mSavedGamesViewModel.deleteSavedGame(mGame);
+                                        mGameIsSaved = !mGameIsSaved;
+                                        mMenu.findItem(R.id.action_remove).setVisible(false);
+                                        mMenu.findItem(R.id.action_add).setVisible(true);
+
+                                        Toast.makeText(getApplication(), "Game removed from your collection!", Toast.LENGTH_SHORT).show();
+                                    }
+                                })
+                                .setNegativeButton(android.R.string.no, null)
+                                .setIcon(android.R.drawable.ic_dialog_alert)
+                                .show();
                     }
                 }
-                return true;
             }
         });
 
-        mMenu.findItem(R.id.action_add).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+        mMenu.findItem(R.id.action_add).getActionView().setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onMenuItemClick(MenuItem menuItem) {
+            public void onClick(View view) {
                 Log.d(TAG, "Clicked add button");
                 if (mGame != null) {
                     if (!mGameIsSaved) {
@@ -133,9 +152,10 @@ public class GameDetailedActivity extends AppCompatActivity {
                         mGameIsSaved = !mGameIsSaved;
                         mMenu.findItem(R.id.action_add).setVisible(false);
                         mMenu.findItem(R.id.action_remove).setVisible(true);
+
+                        Toast.makeText(getApplication(), "Game added to your collection!", Toast.LENGTH_SHORT).show();
                     }
                 }
-                return true;
             }
         });
 
