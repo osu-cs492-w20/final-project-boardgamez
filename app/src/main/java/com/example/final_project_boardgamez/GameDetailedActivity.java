@@ -21,6 +21,7 @@ public class GameDetailedActivity extends AppCompatActivity {
     public static final String EXTRA_GAME_INFO = "Game";
     private static final String TAG = GameDetailedActivity.class.getSimpleName();
     private SavedGamesViewModel mSavedGamesViewModel;
+    private Menu mMenu;
     private boolean mGameIsSaved = false;
     private Game mGame;
     private ImageView mGameIV;
@@ -38,9 +39,6 @@ public class GameDetailedActivity extends AppCompatActivity {
                 this,
                 new ViewModelProvider.AndroidViewModelFactory(getApplication())
         ).get(SavedGamesViewModel.class);
-
-        Button editButton = findViewById(R.id.btn_edit);
-        Button addButton = findViewById(R.id.btn_add);
 
         Intent intent = getIntent();
         if (intent != null && intent.hasExtra(EXTRA_GAME_INFO)) {
@@ -84,25 +82,6 @@ public class GameDetailedActivity extends AppCompatActivity {
 
         }
 
-        editButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.d(TAG, "Replace with an action...");
-            }
-        });
-
-        addButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.d(TAG, "Clicked add button");
-                if (mGame != null) {
-                    if (!mGameIsSaved) {
-                        mSavedGamesViewModel.insertSavedGame(mGame);
-                    }
-                }
-            }
-        });
-
         mSavedGamesViewModel.getSavedGameByName(mGame.name).observe(this, new Observer<Game>() {
             @Override
             public void onChanged(Game game) {
@@ -114,11 +93,52 @@ public class GameDetailedActivity extends AppCompatActivity {
             }
         });
 
+
+
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_detailed, menu);
+        mMenu = menu;
+        if (mGameIsSaved) {
+            mMenu.findItem(R.id.action_remove).setVisible(true);
+        } else {
+            mMenu.findItem(R.id.action_add).setVisible(true);
+        }
+
+        mMenu.findItem(R.id.action_remove).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                Log.d(TAG, "Clicked remove button");
+                if (mGame != null) {
+                    if (mGameIsSaved) {
+                        mSavedGamesViewModel.deleteSavedGame(mGame);
+                        mGameIsSaved = !mGameIsSaved;
+                        mMenu.findItem(R.id.action_remove).setVisible(false);
+                        mMenu.findItem(R.id.action_add).setVisible(true);
+                    }
+                }
+                return true;
+            }
+        });
+
+        mMenu.findItem(R.id.action_add).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                Log.d(TAG, "Clicked add button");
+                if (mGame != null) {
+                    if (!mGameIsSaved) {
+                        mSavedGamesViewModel.insertSavedGame(mGame);
+                        mGameIsSaved = !mGameIsSaved;
+                        mMenu.findItem(R.id.action_add).setVisible(false);
+                        mMenu.findItem(R.id.action_remove).setVisible(true);
+                    }
+                }
+                return true;
+            }
+        });
+
         return true;
     }
 
