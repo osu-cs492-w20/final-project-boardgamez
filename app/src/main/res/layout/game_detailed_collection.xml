@@ -1,67 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="match_parent" android:layout_height="match_parent" >
 
-    <!-- Frame for Main details -->
-    <FrameLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical" android:layout_width="match_parent"
+        android:layout_height="match_parent" >
 
-    <!-- Slightly larger than game_list_item -->
-        <ImageView
-            android:id="@+id/iv_game_image"
-            android:padding="8dp"
-            android:layout_width="128dp"
-            android:layout_height="128dp" />
-
-        <!-- Temp data stored in text -->
         <TextView
             android:id="@+id/tv_game_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="140dp"
-            android:layout_marginTop="36dp"
+            android:textAlignment="center"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="8dp"
             android:padding="8dp"
             android:text="Game Title"
             android:textColor="#000"
             android:textSize="36sp" />
-    </FrameLayout>
 
+        <ImageView
+            android:id="@+id/iv_game_image"
+            android:padding="8dp"
+            android:layout_gravity="bottom|center_horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
-    <!-- Frame for smaller details -->
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-    <!-- Temp data stored in text -->
-    <TextView
-        android:id="@+id/tv_game_description"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="8dp"
-        android:layout_marginLeft="8dp"
-        android:text="Game Description... (hardcoded in the layout)"
-        android:textSize="16sp"
-        android:textColor="#000"/>
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="20dp" >
 
-    <Button
-        android:id="@+id/btn_add"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Add to Collection"
-        android:textSize="20sp"
-        android:layout_marginBottom="60dp"
-        android:layout_gravity="bottom|center"/>
+            <TextView
+                android:id="@+id/tv_game_players"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
 
-    <Button
-        android:id="@+id/btn_edit"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Edit"
-        android:textSize="20sp"
-        android:layout_gravity="bottom|center"/>
-    </FrameLayout>
+            <TextView
+                android:id="@+id/tv_game_playtime"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
 
+            <TextView
+                android:id="@+id/tv_game_min_age"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
 
-</LinearLayout>
+            <TextView
+                android:id="@+id/tv_game_year_published"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_game_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:textAlignment="textStart"
+            android:layout_gravity="start"
+            android:text="Game Description... (hardcoded in the layout)"
+            android:textSize="16sp"
+            android:textColor="#000"/>
+
+        <Button
+            android:id="@+id/btn_add"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Add to Collection"
+            android:textSize="20sp"
+            android:layout_marginBottom="60dp"
+            android:layout_gravity="bottom|center"/>
+
+        <Button
+            android:id="@+id/btn_edit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Edit"
+            android:textSize="20sp"
+            android:layout_gravity="bottom|center"/>
+
+    </LinearLayout>
+
+</ScrollView>
