@@ -3,8 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/action_add"
-        app:actionLayout="@layout/action_add_button"
+        android:id="@+id/action_save"
+        app:actionLayout="@layout/action_save_button"
         app:showAsAction="always"
         android:visible="false" />
 
