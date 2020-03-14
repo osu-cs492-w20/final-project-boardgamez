@@ -53,6 +53,8 @@ public class SearchActivity extends AppCompatActivity implements GameManagerAdap
         Log.d(TAG, "SearchActivity: CREATING... ");
         setContentView(R.layout.activity_search);
 
+        getSupportActionBar().setTitle("Discover Games");
+
         mGamesViewModel = new GamesViewModel();
         mGameAdapter = new GameManagerAdapter(this);
         mGamesRV = findViewById(R.id.rv_search);
