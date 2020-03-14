@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -38,6 +39,7 @@ public class GameDetailedActivity extends AppCompatActivity {
 
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle("Game Details");
 
         mToast = null;
 
@@ -167,8 +169,38 @@ public class GameDetailedActivity extends AppCompatActivity {
             }
         });
 
+        mMenu.findItem(R.id.action_share).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                Log.d(TAG, "Clicked share button");
+                if (mGame != null) {
+                    String shareText = "Look at this game: " + mGame.name;
+                    if(mGame.min_players == mGame.max_players){
+                        shareText += ",  Players: " + mGame.min_players;
+                    }else{
+                        shareText +=",  Players: " + mGame.min_players + " - " + mGame.max_players;
+                    }
+                    if(mGame.min_playtime == mGame.max_playtime){
+                        shareText += ",  Playtime: " + mGame.min_playtime + " mins";
+                    }else{
+                        shareText += ",  Playtime: " + mGame.min_playtime + " - " + mGame.max_playtime + " mins";
+                    }
+                    shareText += ",  Age: " + mGame.min_age + "+";
+
+                    Intent shareIntent = new Intent(Intent.ACTION_SEND);
+                    shareIntent.putExtra(Intent.EXTRA_TEXT, shareText);
+                    shareIntent.setType("text/plain");
+
+                    Intent chooserIntent = Intent.createChooser(shareIntent, null);
+                    startActivity(chooserIntent);
+                }
+                return true;
+            }
+        });
+
         return true;
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
