@@ -9,19 +9,15 @@
         app:showAsAction="ifRoom" />
 
     <item
-        android:id="@+id/action_add"
-        android:orderInCategory="1"
-        android:icon="@drawable/ic_action_add"
-        android:title="Add game to collection"
-        app:showAsAction="ifRoom"
+        android:id="@+id/action_save"
+        app:actionLayout="@layout/action_save_button"
+        app:showAsAction="always"
         android:visible="false" />
 
     <item
         android:id="@+id/action_remove"
-        android:orderInCategory="2"
-        android:icon="@drawable/ic_action_remove"
-        android:title="Remove game from collection"
-        app:showAsAction="ifRoom"
+        app:actionLayout="@layout/action_remove_button"
+        app:showAsAction="always"
         android:visible="false" />
 
 </menu>
