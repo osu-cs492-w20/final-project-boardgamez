@@ -9,6 +9,8 @@ import com.example.final_project_boardgamez.GameData.Game;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -20,6 +22,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements GameManagerAdapter.OnGameClickListener {
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -27,6 +30,7 @@ public class MainActivity extends AppCompatActivity implements GameManagerAdapte
     private RecyclerView mMainGameListRV;
     private GameManagerAdapter mAdapterRV;                  // Changed to a custom adapter
     private RecyclerView.LayoutManager mLayoutManagerRV;
+    private SavedGamesViewModel mSavedGamesViewModel;
     private TextView mAppliedFiltersTV;
     private String[] mFilterItems;
     private boolean[] mCheckedFilters;
@@ -60,9 +64,20 @@ public class MainActivity extends AppCompatActivity implements GameManagerAdapte
         mAdapterRV = new GameManagerAdapter(this);
         mMainGameListRV.setAdapter(mAdapterRV);
 
+        mSavedGamesViewModel = new ViewModelProvider(
+                this,
+                new ViewModelProvider.AndroidViewModelFactory(getApplication())
+        ).get(SavedGamesViewModel.class);
+
+        mSavedGamesViewModel.getAllSavedGames().observe(this, new Observer<List<Game>>() {
+            @Override
+            public void onChanged(List<Game> games) {
+                mAdapterRV.updateGameCollection(games);
+            }
+        });
 
         // Adding a Game to the RV      //TODO: Just Hard coding for testings
-        Game game = new Game();
+      /*  Game game = new Game();
         game.name = "Settlers of Catan";
         game.description = "HARDCODED: In Catan (formerly The Settlers of Catan), players try to be the dominant force on the island of Catan by building settlements, cities, and roads.";
         game.min_age = 10;
@@ -71,7 +86,7 @@ public class MainActivity extends AppCompatActivity implements GameManagerAdapte
         game.max_players = 4;
         game.min_playtime = 60;
         mAdapterRV.addGame(game);
-
+*/
         Log.d(TAG, "Main: Adapter is size: " + mAdapterRV.getItemCount());
 
 

@@ -1,12 +1,16 @@
 package com.example.final_project_boardgamez;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.example.final_project_boardgamez.GameData.Game;
+import com.example.final_project_boardgamez.GameData.Status;
 
 import java.util.List;
 
@@ -22,6 +26,8 @@ public class SearchActivity extends AppCompatActivity implements GameManagerAdap
     private GamesViewModel mGamesViewModel;
     private GameManagerAdapter mGameAdapter;
     private RecyclerView mGamesRV;
+    private TextView mLoadingError;
+    private ProgressBar mLoadingIndicator;
     private EditText mSearchField;
     private Button mSearchButton;
 
@@ -35,6 +41,8 @@ public class SearchActivity extends AppCompatActivity implements GameManagerAdap
         mGamesRV = findViewById(R.id.rv_search);
         mSearchField = findViewById(R.id.et_search_field);
         mSearchButton = findViewById(R.id.btn_search_button);
+    //    mLoadingError = findViewById(R.id.tv_loading_error);
+     //   mLoadingIndicator = findViewById(R.id.pb_loading_indicator);
 
         mGamesRV.setAdapter(mGameAdapter);
         mGamesRV.setLayoutManager(new LinearLayoutManager(this));
@@ -57,11 +65,29 @@ public class SearchActivity extends AppCompatActivity implements GameManagerAdap
             }
         });
 
+       /* mGamesViewModel.getLoadingStatus().observe(this, new Observer<Status>() {
+            @Override
+            public void onChanged(Status status) {
+                if (status == Status.LOADING) {
+                    mLoadingIndicator.setVisibility(View.VISIBLE);
+                } else if (status == Status.SUCCESS) {
+                    mLoadingIndicator.setVisibility(View.INVISIBLE);
+                    mLoadingError.setVisibility(View.INVISIBLE);
+                    mGamesRV.setVisibility(View.VISIBLE);
+                } else {
+                    mLoadingIndicator.setVisibility(View.INVISIBLE);
+                    mGamesRV.setVisibility(View.INVISIBLE);
+                    mLoadingError.setVisibility(View.VISIBLE);
 
+                }
+            }
+        });*/
     }
 
     @Override
     public void onGameClicked(Game game) {
-
+        Intent intent = new Intent(this, GameDetailedActivity.class);
+        intent.putExtra(GameDetailedActivity.EXTRA_GAME_INFO, game);
+        startActivity(intent);
     }
 }
