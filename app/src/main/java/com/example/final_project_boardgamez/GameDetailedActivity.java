@@ -175,17 +175,33 @@ public class GameDetailedActivity extends AppCompatActivity {
                 Log.d(TAG, "Clicked share button");
                 if (mGame != null) {
                     String shareText = "Look at this game: " + mGame.name;
-                    if(mGame.min_players == mGame.max_players){
-                        shareText += ",  Players: " + mGame.min_players;
-                    }else{
-                        shareText +=",  Players: " + mGame.min_players + " - " + mGame.max_players;
+
+                    if(mGame.max_players == 0 || mGame.min_players == 0){
+                        shareText += ",  Players: " + "N/A";
+                    } else {
+                        if(mGame.min_players == mGame.max_players){
+                            shareText += ",  Players: " + mGame.min_players;
+                        }else{
+                            shareText +=",  Players: " + mGame.min_players + " - " + mGame.max_players;
+                        }
                     }
-                    if(mGame.min_playtime == mGame.max_playtime){
-                        shareText += ",  Playtime: " + mGame.min_playtime + " mins";
-                    }else{
-                        shareText += ",  Playtime: " + mGame.min_playtime + " - " + mGame.max_playtime + " mins";
+
+                    if(mGame.max_playtime == 0 || mGame.min_playtime ==0){
+                        shareText += ",  Playtime: " + "N/A";
+                    } else{
+                        if(mGame.min_playtime == mGame.max_playtime){
+                            shareText += ",  Playtime: " + mGame.min_playtime + " mins";
+                        }else{
+                            shareText += ",  Playtime: " + mGame.min_playtime + " - " + mGame.max_playtime + " mins";
+                        }
                     }
-                    shareText += ",  Age: " + mGame.min_age + "+";
+
+                    if(mGame.min_age == 0){
+                        shareText += ",  Age: " + "N/A";
+                    }else{
+                        shareText += ",  Age: " + mGame.min_age + "+";
+                    }
+
 
                     Intent shareIntent = new Intent(Intent.ACTION_SEND);
                     shareIntent.putExtra(Intent.EXTRA_TEXT, shareText);
