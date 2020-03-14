@@ -58,8 +58,12 @@ public class GameManagerAdapter extends RecyclerView.Adapter<GameManagerAdapter.
 
     public void updateGameCollection(List<Game> gameList) {
         Log.d(TAG, "Adapter: Updating whole ArrayList with another list");
-        mGameDetails = gameList;
-        notifyDataSetChanged();
+        if(gameList != null){
+            mGameDetails = gameList;
+            notifyDataSetChanged();
+        }else{
+            Log.d(TAG, "Adapter: CAN'T UPDATE GAME LIST WITH NULL LIST.");
+        }
     }
 
     @Override
