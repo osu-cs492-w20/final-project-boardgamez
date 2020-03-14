@@ -88,7 +88,7 @@ public class SearchActivity extends AppCompatActivity implements GameManagerAdap
                     mGamesViewModel.getGames().observe(SearchActivity.this, new Observer<List<Game>>() {
                         @Override
                         public void onChanged(List<Game> games) {
-                            if (games != null) {
+                            if (games != null && !games.isEmpty()) {
                                 mSearchResultsList = games;
                                 Log.d(TAG, "First game in list: " + games.get(0).name);
                                 mGameAdapter.updateGameCollection(games);
@@ -149,12 +149,36 @@ public class SearchActivity extends AppCompatActivity implements GameManagerAdap
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode != Activity.RESULT_OK) {
-            Toast.makeText(this, "Error scanning barcode", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "INFO: Barcode scanner closed", Toast.LENGTH_LONG).show();
+            /*mGamesViewModel.loadScannedGame("722301926246");  // TODO: HARDCODED UPC for testing API on emulator
+            mGamesViewModel.getScannedGame().observe(SearchActivity.this, new Observer<List<Game>>() {
+                @Override
+                public void onChanged(List<Game> game) {
+                    if (game != null && !game.isEmpty()) {
+                        Intent intent = new Intent(SearchActivity.this, GameDetailedActivity.class);
+                        intent.putExtra(GameDetailedActivity.EXTRA_GAME_INFO, game.get(0));
+                        startActivity(intent);
+                    }
+                }
+            });*/
             return;
         }
         if (requestCode == BARCODE_READER_ACTIVITY_REQUEST && data != null) {
             Barcode barcode = data.getParcelableExtra(BarcodeReaderActivity.KEY_CAPTURED_BARCODE);  // Possibly pass in "barcode"?
-            Toast.makeText(this, barcode.rawValue, Toast.LENGTH_LONG).show();
+            mGamesViewModel.loadScannedGame(barcode.rawValue);
+            mGamesViewModel.getScannedGame().observe(SearchActivity.this, new Observer<List<Game>>() {
+                @Override
+                public void onChanged(List<Game> game) {
+                    if (game != null && !game.isEmpty()) {
+                        Intent intent = new Intent(SearchActivity.this, GameDetailedActivity.class);
+                        intent.putExtra(GameDetailedActivity.EXTRA_GAME_INFO, game.get(0));
+                        startActivity(intent);
+                    }  else {// TODO: Handle case where no results found
+
+                    }
+                }
+            });
+           // Toast.makeText(this, barcode.rawValue, Toast.LENGTH_LONG).show();
         }
     }
 
