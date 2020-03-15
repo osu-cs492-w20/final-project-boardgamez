@@ -24,7 +24,7 @@
 
         <ImageButton
             android:id="@+id/ib_scan_barcode"
-            android:src="@drawable/ic_filter_list"
+            android:src="@drawable/ic_scan_barcode"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_gravity="right"
