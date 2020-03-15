@@ -2,6 +2,7 @@ package com.example.final_project_boardgamez;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -25,6 +26,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -109,23 +111,6 @@ public class SearchActivity extends AppCompatActivity implements GameManagerAdap
                 startActivityForResult(intent, BARCODE_READER_ACTIVITY_REQUEST);
             }
         });
-       /* mSearchButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String search = mSearchField.getText().toString();
-                mGamesViewModel.loadGames(search);
-                mGamesViewModel.getGames().observe(SearchActivity.this, new Observer<List<Game>>() {
-                    @Override
-                    public void onChanged(List<Game> games) {
-                        if (games != null) {
-                            mSearchResultsList = games;
-                            Log.d(TAG, "First game in list: " + games.get(0).name);
-                            mGameAdapter.updateGameCollection(games);
-                        }
-                    }
-                });
-            }
-        });*/
 
        /* mGamesViewModel.getLoadingStatus().observe(this, new Observer<Status>() {
             @Override
@@ -151,7 +136,6 @@ public class SearchActivity extends AppCompatActivity implements GameManagerAdap
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode != Activity.RESULT_OK) {
-            Toast.makeText(this, "INFO: Barcode scanner closed", Toast.LENGTH_LONG).show();
             /*mGamesViewModel.loadScannedGame("722301926246");  // TODO: HARDCODED UPC for testing API on emulator
             mGamesViewModel.getScannedGame().observe(SearchActivity.this, new Observer<List<Game>>() {
                 @Override
@@ -175,8 +159,13 @@ public class SearchActivity extends AppCompatActivity implements GameManagerAdap
                         Intent intent = new Intent(SearchActivity.this, GameDetailedActivity.class);
                         intent.putExtra(GameDetailedActivity.EXTRA_GAME_INFO, game.get(0));
                         startActivity(intent);
-                    }  else {// TODO: Handle case where no results found
-
+                    }  else {       // Handle case where no results found
+                        new AlertDialog.Builder(SearchActivity.this)
+                                .setTitle("Error")
+                                .setMessage("Barcode scanner couldn't find that game. Please try searching for it by name.")
+                                .setNegativeButton("Dismiss", null)
+                                .setIcon(android.R.drawable.ic_dialog_alert)
+                                .show();
                     }
                 }
             });

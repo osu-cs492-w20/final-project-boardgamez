@@ -24,6 +24,7 @@ public class BarcodeSpiderUtils {
         String upc;     // TODO: Add these attributes to Game class??
         String image;
         String publisher;
+        String parent_category;
         String description;
     }
 
@@ -38,7 +39,7 @@ public class BarcodeSpiderUtils {
     public static ArrayList<Game> parseGameJSON(String json) {
         Gson gson = new Gson();
         BSUPCLookupResults results = gson.fromJson(json, BSUPCLookupResults.class);
-        if (results != null && results.item_attributes != null) {
+        if (results != null && results.item_attributes != null && results.item_attributes.parent_category.equals("Toys & Games")) {
             ArrayList<Game> gameList = new ArrayList<>();
             Game game = new Game();
 
