@@ -3,47 +3,83 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <EditText
-        android:id="@+id/et_search_field"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="24sp"
-        android:textColor="@color/colorPrimaryText"
-        android:hint="@string/search_field_hint_text">
+        android:orientation="horizontal">
 
-    </EditText>
+        <EditText
+            android:id="@+id/et_search_field"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:layout_marginHorizontal="8dp"
+            android:layout_weight="1"
+            android:textSize="24sp"
+            android:textColor="@color/colorPrimaryText"
+            android:imeOptions="actionSearch"
+            android:inputType="text"
+            android:hint="@string/search_field_hint_text">
+        </EditText>
 
-    <Button
-        android:id="@+id/btn_search_button"
+        <ImageButton
+            android:id="@+id/ib_scan_barcode"
+            android:src="@drawable/ic_scan_barcode"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginHorizontal="8dp"
+            android:layout_gravity="right"
+            android:gravity="right"
+            android:tint="@color/colorPrimaryText"
+            android:layout_alignParentRight="true" />
+
+    </LinearLayout>
+
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="22sp"
-        android:textColor="@color/colorTextIcons"
-        android:background="@color/colorPrimary"
-        android:text="@string/search_btn_text">
-    </Button>
+        android:layout_height="match_parent">
 
-    <!--<TextView
-        android:id="@+id/tv_loading_error"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:textSize="20sp"
-        android:padding="16dp"
-        android:visibility="invisible"
-        android:text="@string/loading_error"/>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_search"
+            android:scrollbars="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
 
-    <ProgressBar
-        android:id="@+id/pb_loading_indicator"
-        android:layout_width="72dp"
-        android:layout_height="72dp"
-        android:layout_gravity="top|center_horizontal"
-        android:layout_marginTop="45dp"
-        android:visibility="invisible" /> -->
+        <TextView
+            android:id="@+id/tv_loading_error"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_horizontal"
+            android:textSize="20sp"
+            android:padding="16dp"
+            android:layout_marginHorizontal="8dp"
+            android:background="@android:color/holo_red_light"
+            android:textColor="#fff"
+            android:visibility="invisible"
+            android:text="@string/loading_error"/>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_search"
-        android:scrollbars="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        <TextView
+            android:id="@+id/tv_no_results"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_horizontal"
+            android:textSize="20sp"
+            android:padding="16dp"
+            android:layout_marginHorizontal="8dp"
+            android:visibility="invisible"
+            android:text="No results"/>
+
+        <ProgressBar
+            android:id="@+id/pb_loading_indicator"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:layout_gravity="top|center_horizontal"
+            android:layout_margin="32dp"
+            android:visibility="invisible" />
+
+    </FrameLayout>
+
 
 </LinearLayout>

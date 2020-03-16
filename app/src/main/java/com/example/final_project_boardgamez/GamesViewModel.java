@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModel;
 public class GamesViewModel extends ViewModel {
 
     private LiveData<List<Game>> mGames;
+    private LiveData<List<Game>> mScannedGame;
     private LiveData<Status> mLoadingStatus;
 
     private GamesRepository mRepository;
@@ -19,6 +20,7 @@ public class GamesViewModel extends ViewModel {
     public GamesViewModel() {
         mRepository = new GamesRepository();
         mGames = mRepository.getGames();
+        mScannedGame = mRepository.getScannedGame();
         mLoadingStatus = mRepository.getLoadingStatus();
     }
 
@@ -26,9 +28,13 @@ public class GamesViewModel extends ViewModel {
         mRepository.loadGames(search);
     }
 
+    public void loadScannedGame(String upc) { mRepository.loadGameFromUPC(upc); }
+
     public LiveData<List<Game>> getGames() {
         return mGames;
     }
+
+    public LiveData<List<Game>> getScannedGame() { return mScannedGame; }
 
     public LiveData<Status> getLoadingStatus() {
         return mLoadingStatus;

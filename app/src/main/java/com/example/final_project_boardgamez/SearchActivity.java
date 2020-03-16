@@ -1,21 +1,33 @@
 package com.example.final_project_boardgamez;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.final_project_boardgamez.GameData.Game;
 import com.example.final_project_boardgamez.GameData.Status;
+import com.google.android.gms.vision.barcode.Barcode;
+import com.notbytes.barcode_reader.BarcodeReaderActivity;
 
 import java.io.Serializable;
 import java.util.List;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -24,14 +36,17 @@ import androidx.recyclerview.widget.RecyclerView;
 public class SearchActivity extends AppCompatActivity implements GameManagerAdapter.OnGameClickListener {
 
     private static final String TAG = SearchActivity.class.getSimpleName();
+    private static final int BARCODE_READER_ACTIVITY_REQUEST = 0;
 
     private GamesViewModel mGamesViewModel;
     private GameManagerAdapter mGameAdapter;
     private RecyclerView mGamesRV;
     private TextView mLoadingError;
+    private TextView mNoResults;
     private ProgressBar mLoadingIndicator;
     private EditText mSearchField;
     private Button mSearchButton;
+    private ImageButton mScanBarcode;
 
     private List mSearchResultsList;
     private static final String SEARCH_RESULTS_KEY = "searchResults";
@@ -48,9 +63,13 @@ public class SearchActivity extends AppCompatActivity implements GameManagerAdap
         mGameAdapter = new GameManagerAdapter(this);
         mGamesRV = findViewById(R.id.rv_search);
         mSearchField = findViewById(R.id.et_search_field);
-        mSearchButton = findViewById(R.id.btn_search_button);
-        //mLoadingError = findViewById(R.id.tv_loading_error);
-        //mLoadingIndicator = findViewById(R.id.pb_loading_indicator);
+        mScanBarcode = findViewById(R.id.ib_scan_barcode);
+        // mSearchButton = findViewById(R.id.btn_search_button);
+        mNoResults = findViewById(R.id.tv_no_results);
+        mLoadingError = findViewById(R.id.tv_loading_error);
+        mLoadingIndicator = findViewById(R.id.pb_loading_indicator);
+
+        mNoResults.setTypeface(null, Typeface.ITALIC);
 
         mGamesRV.setAdapter(mGameAdapter);
         mGamesRV.setLayoutManager(new LinearLayoutManager(this));
@@ -66,29 +85,51 @@ public class SearchActivity extends AppCompatActivity implements GameManagerAdap
             }
         }
 
-        mSearchButton.setOnClickListener(new View.OnClickListener() {
+        mSearchField.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
-            public void onClick(View view) {
-                String search = mSearchField.getText().toString();
-                mGamesViewModel.loadGames(search);
-                mGamesViewModel.getGames().observe(SearchActivity.this, new Observer<List<Game>>() {
-                    @Override
-                    public void onChanged(List<Game> games) {
-                        if (games != null) {
-                            mSearchResultsList = games;
-                            Log.d(TAG, "First game in list: " + games.get(0).name);
-                            mGameAdapter.updateGameCollection(games);
+            public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    mSearchField.clearFocus();
+                    InputMethodManager inputMethodManager = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                    inputMethodManager.hideSoftInputFromWindow(mSearchField.getWindowToken(), 0);
+                    String search = mSearchField.getText().toString();
+                    mGamesViewModel.loadGames(search);
+                    mGamesViewModel.getGames().observe(SearchActivity.this, new Observer<List<Game>>() {
+                        @Override
+                        public void onChanged(List<Game> games) {
+                            if (games != null) {
+                                mSearchResultsList = games;
+                               // Log.d(TAG, "First game in list: " + games.get(0).name);
+                                mGameAdapter.updateGameCollection(games);
+                                if (games.isEmpty()){
+                                    mNoResults.setVisibility(View.VISIBLE);
+                                } else {
+                                    mNoResults.setVisibility(View.INVISIBLE);
+                                }
+                            }
                         }
-                    }
-                });
+                    });
+                }
+                return false;
             }
         });
 
-       /* mGamesViewModel.getLoadingStatus().observe(this, new Observer<Status>() {
+        mScanBarcode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = BarcodeReaderActivity.getLaunchIntent(SearchActivity.this, true, false);
+                startActivityForResult(intent, BARCODE_READER_ACTIVITY_REQUEST);
+            }
+        });
+
+        mGamesViewModel.getLoadingStatus().observe(this, new Observer<Status>() {
             @Override
             public void onChanged(Status status) {
                 if (status == Status.LOADING) {
                     mLoadingIndicator.setVisibility(View.VISIBLE);
+                    mGamesRV.setVisibility(View.INVISIBLE);
+                    mLoadingError.setVisibility(View.INVISIBLE);
+                    mNoResults.setVisibility(View.INVISIBLE);
                 } else if (status == Status.SUCCESS) {
                     mLoadingIndicator.setVisibility(View.INVISIBLE);
                     mLoadingError.setVisibility(View.INVISIBLE);
@@ -97,12 +138,76 @@ public class SearchActivity extends AppCompatActivity implements GameManagerAdap
                     mLoadingIndicator.setVisibility(View.INVISIBLE);
                     mGamesRV.setVisibility(View.INVISIBLE);
                     mLoadingError.setVisibility(View.VISIBLE);
-
+                    mNoResults.setVisibility(View.INVISIBLE);
                 }
             }
-        });*/
+        });
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode != Activity.RESULT_OK) {
+            /*mGamesViewModel.loadScannedGame("722301926246");  // TODO: HARDCODED UPC for testing API on emulator
+            mGamesViewModel.getScannedGame().observe(SearchActivity.this, new Observer<List<Game>>() {
+                @Override
+                public void onChanged(List<Game> game) {
+                    if (game != null && !game.isEmpty()) {
+                        Intent intent = new Intent(SearchActivity.this, GameDetailedActivity.class);
+                        intent.putExtra(GameDetailedActivity.EXTRA_GAME_INFO, game.get(0));
+                        startActivity(intent);
+                    }
+                }
+            });*/
+            return;
+        }
+        if (requestCode == BARCODE_READER_ACTIVITY_REQUEST && data != null) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(SearchActivity.this);
+            builder.setTitle("Error");
+            builder.setMessage("Barcode scanner couldn't find that game. Please try searching for it by name.");
+            builder.setNegativeButton("Dismiss", null);
+            builder.setIcon(android.R.drawable.ic_dialog_alert);
+            final AlertDialog alertDialog = builder.create();
+            Barcode barcode = data.getParcelableExtra(BarcodeReaderActivity.KEY_CAPTURED_BARCODE);  // Possibly pass in "barcode"?
+            mGamesViewModel.loadScannedGame(barcode.rawValue);
+            mGamesViewModel.getScannedGame().observe(SearchActivity.this, new Observer<List<Game>>() {
+                @Override
+                public void onChanged(List<Game> game) {
+                    if (game != null && !game.isEmpty()) {
+                        if(alertDialog.isShowing()) {
+                            alertDialog.cancel();
+                        }
+                        Intent intent = new Intent(SearchActivity.this, GameDetailedActivity.class);
+                        intent.putExtra(GameDetailedActivity.EXTRA_GAME_INFO, game.get(0));
+                        startActivity(intent);
+                    }
+                    else if (game == null) {       // Handle case where no results found
+                        /*AlertDialog.Builder builder = new AlertDialog.Builder(SearchActivity.this);
+                        builder.setTitle("Error");
+                        builder.setMessage("Barcode scanner couldn't find that game. Please try searching for it by name.");
+                        builder.setNegativeButton("Dismiss", null);
+                        builder.setIcon(android.R.drawable.ic_dialog_alert);
+                        AlertDialog alertDialog = builder.create();*/
+                        //alertDialog.show();
+                        if(!alertDialog.isShowing()) {
+                            alertDialog.show();
+                        }
+
+                       /* new AlertDialog.Builder(SearchActivity.this)
+                                .setTitle("Error")
+                                .setMessage("Barcode scanner couldn't find that game. Please try searching for it by name.")
+                                .setNegativeButton("Dismiss", null)
+                                .setIcon(android.R.drawable.ic_dialog_alert)
+                                .show();*/
+                    }
+                }
+            });
+
+
+           // Toast.makeText(this, barcode.rawValue, Toast.LENGTH_LONG).show();
+        }
+    }
 
     @Override
     protected void onStart() {
