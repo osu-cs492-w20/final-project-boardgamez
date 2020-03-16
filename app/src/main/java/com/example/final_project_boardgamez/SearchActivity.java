@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -41,6 +42,7 @@ public class SearchActivity extends AppCompatActivity implements GameManagerAdap
     private GameManagerAdapter mGameAdapter;
     private RecyclerView mGamesRV;
     private TextView mLoadingError;
+    private TextView mNoResults;
     private ProgressBar mLoadingIndicator;
     private EditText mSearchField;
     private Button mSearchButton;
@@ -63,8 +65,11 @@ public class SearchActivity extends AppCompatActivity implements GameManagerAdap
         mSearchField = findViewById(R.id.et_search_field);
         mScanBarcode = findViewById(R.id.ib_scan_barcode);
         // mSearchButton = findViewById(R.id.btn_search_button);
-        //mLoadingError = findViewById(R.id.tv_loading_error);
-        //mLoadingIndicator = findViewById(R.id.pb_loading_indicator);
+        mNoResults = findViewById(R.id.tv_no_results);
+        mLoadingError = findViewById(R.id.tv_loading_error);
+        mLoadingIndicator = findViewById(R.id.pb_loading_indicator);
+
+        mNoResults.setTypeface(null, Typeface.ITALIC);
 
         mGamesRV.setAdapter(mGameAdapter);
         mGamesRV.setLayoutManager(new LinearLayoutManager(this));
@@ -92,10 +97,15 @@ public class SearchActivity extends AppCompatActivity implements GameManagerAdap
                     mGamesViewModel.getGames().observe(SearchActivity.this, new Observer<List<Game>>() {
                         @Override
                         public void onChanged(List<Game> games) {
-                            if (games != null && !games.isEmpty()) {
+                            if (games != null) {
                                 mSearchResultsList = games;
-                                Log.d(TAG, "First game in list: " + games.get(0).name);
+                               // Log.d(TAG, "First game in list: " + games.get(0).name);
                                 mGameAdapter.updateGameCollection(games);
+                                if (games.isEmpty()){
+                                    mNoResults.setVisibility(View.VISIBLE);
+                                } else {
+                                    mNoResults.setVisibility(View.INVISIBLE);
+                                }
                             }
                         }
                     });
@@ -112,11 +122,14 @@ public class SearchActivity extends AppCompatActivity implements GameManagerAdap
             }
         });
 
-       /* mGamesViewModel.getLoadingStatus().observe(this, new Observer<Status>() {
+        mGamesViewModel.getLoadingStatus().observe(this, new Observer<Status>() {
             @Override
             public void onChanged(Status status) {
                 if (status == Status.LOADING) {
                     mLoadingIndicator.setVisibility(View.VISIBLE);
+                    mGamesRV.setVisibility(View.INVISIBLE);
+                    mLoadingError.setVisibility(View.INVISIBLE);
+                    mNoResults.setVisibility(View.INVISIBLE);
                 } else if (status == Status.SUCCESS) {
                     mLoadingIndicator.setVisibility(View.INVISIBLE);
                     mLoadingError.setVisibility(View.INVISIBLE);
@@ -125,10 +138,10 @@ public class SearchActivity extends AppCompatActivity implements GameManagerAdap
                     mLoadingIndicator.setVisibility(View.INVISIBLE);
                     mGamesRV.setVisibility(View.INVISIBLE);
                     mLoadingError.setVisibility(View.VISIBLE);
-
+                    mNoResults.setVisibility(View.INVISIBLE);
                 }
             }
-        });*/
+        });
     }
 
     @Override
@@ -169,6 +182,8 @@ public class SearchActivity extends AppCompatActivity implements GameManagerAdap
                     }
                 }
             });
+
+
            // Toast.makeText(this, barcode.rawValue, Toast.LENGTH_LONG).show();
         }
     }
