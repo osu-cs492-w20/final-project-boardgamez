@@ -23,7 +23,6 @@ public class GamesRepository implements LoadGamesTask.LoadGamesTaskCallback, Loa
     private MutableLiveData<List<Game>> mGames;
     private MutableLiveData<List<Game>> mScannedGame;
     private MutableLiveData<Status> mLoadingStatus;
-    private boolean lastcall;
 
     private String mCurrentSearch;
 
@@ -38,14 +37,6 @@ public class GamesRepository implements LoadGamesTask.LoadGamesTaskCallback, Loa
         mLoadingStatus.setValue(Status.SUCCESS);
 
         mCurrentSearch = null;
-    }
-
-    public void updateLastCall (boolean val) {
-        lastcall = val;
-    }
-
-    public boolean getLastCall() {
-        return lastcall;
     }
 
     public void loadGames(String search) {

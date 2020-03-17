@@ -39,7 +39,7 @@ public class BarcodeSpiderUtils {
     public static ArrayList<Game> parseGameJSON(String json) {
         Gson gson = new Gson();
         BSUPCLookupResults results = gson.fromJson(json, BSUPCLookupResults.class);
-        if (results != null && results.item_attributes != null && results.item_attributes.parent_category.equals("Toys & Games")) {
+        if (results != null && results.item_attributes != null && results.item_attributes.parent_category.contains("Game")) {
             ArrayList<Game> gameList = new ArrayList<>();
             Game game = new Game();
 
