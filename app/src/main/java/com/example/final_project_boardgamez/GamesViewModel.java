@@ -1,5 +1,7 @@
 package com.example.final_project_boardgamez;
 
+import android.content.Context;
+
 import com.example.final_project_boardgamez.GameData.Game;
 import com.example.final_project_boardgamez.GameData.GamesRepository;
 import com.example.final_project_boardgamez.GameData.Status;
@@ -28,7 +30,7 @@ public class GamesViewModel extends ViewModel {
         mRepository.loadGames(search);
     }
 
-    public void loadScannedGame(String upc) { mRepository.loadGameFromUPC(upc); }
+    public void loadScannedGame(Context context, String upc) { mRepository.loadGameFromUPC(upc, context); }
 
     public LiveData<List<Game>> getGames() {
         return mGames;
