@@ -28,12 +28,6 @@ public class SavedGamesRepository {
     }
 
     public LiveData<Game> getSavedGameByName(String name) {
-      /*  LiveData<Game> game;
-        try {
-            game = new GetGameByNameAsyncTask(mSavedGamesDao).execute(name);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }*/
         return mSavedGamesDao.getGameByName(name);
     }
 

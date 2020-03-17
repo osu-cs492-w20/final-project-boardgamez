@@ -66,6 +66,23 @@
             android:textSize="16sp"
             android:textColor="#000"/>
 
+        <TextView
+            android:id="@+id/tv_applied_filters_details"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:textSize="16dp"/>
+
+        <Button
+            android:id="@+id/edit_tags_btn"
+            android:layout_width="@dimen/fab_size"
+            android:layout_height="@dimen/fab_size"
+            android:background="@drawable/ic_tags"
+            android:padding="16dp"
+            android:layout_margin="@dimen/fab_margin"
+            android:layout_gravity="bottom|end"
+            android:visibility="invisible"/>
+
     </LinearLayout>
 
 </ScrollView>

@@ -8,6 +8,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -20,6 +21,8 @@ import androidx.lifecycle.ViewModelProvider;
 import com.bumptech.glide.Glide;
 import com.example.final_project_boardgamez.GameData.Game;
 
+import java.util.ArrayList;
+
 public class GameDetailedActivity extends AppCompatActivity {
     public static final String EXTRA_GAME_INFO = "Game";
     private static final String TAG = GameDetailedActivity.class.getSimpleName();
@@ -28,6 +31,11 @@ public class GameDetailedActivity extends AppCompatActivity {
     private Game mGame;
     private Menu mMenu;
     private Toast mToast;
+
+    private TextView mAppliedFiltersTV;
+    private String[] mFilterItems;
+    private boolean[] mCheckedFilters;
+    ArrayList<Integer> mSelectedFilters = new ArrayList<>();
 
     private boolean mGameIsSaved = false;
 
@@ -40,6 +48,11 @@ public class GameDetailedActivity extends AppCompatActivity {
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Game Details");
+
+        mFilterItems = getResources().getStringArray(R.array.filter_list);
+        mCheckedFilters = new boolean[mFilterItems.length];
+        mAppliedFiltersTV = findViewById(R.id.tv_applied_filters_details);
+        mAppliedFiltersTV.setVisibility(View.GONE);
 
         mToast = null;
 
@@ -99,6 +112,20 @@ public class GameDetailedActivity extends AppCompatActivity {
                 }
             }
         });
+
+        Button TagsBtn = findViewById(R.id.edit_tags_btn);
+        //if(mGameIsSaved){
+            TagsBtn.setVisibility(View.VISIBLE);
+            Log.d(TAG, "Tags button should be visible");
+        //}
+
+        TagsBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onEditTagsClicked();
+            }
+        });
+
 
     }
 
@@ -229,4 +256,70 @@ public class GameDetailedActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+
+
+    private void onEditTagsClicked() {
+        AlertDialog.Builder mBuilder = new AlertDialog.Builder(GameDetailedActivity.this);
+        mBuilder.setTitle("Edit Tags");
+        mBuilder.setMultiChoiceItems(mFilterItems, mCheckedFilters, new DialogInterface.OnMultiChoiceClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int position, boolean isChecked) {
+                if (isChecked) {
+                    if (!mSelectedFilters.contains(position)){
+                        mSelectedFilters.add(position);
+                    }
+                } else { // Filter was unchecked
+                    if (mSelectedFilters.contains(position)) {
+                        mSelectedFilters.remove(position);
+                    }
+                }
+            }
+        });
+
+        mBuilder.setCancelable(false);
+        mBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int which) {
+                String filterItem = "";
+                if (mSelectedFilters.size() > 0) {
+                    for (int i = 0; i < mSelectedFilters.size(); i++) {
+                        filterItem = filterItem + mFilterItems[mSelectedFilters.get(i)];
+                        if (i != mSelectedFilters.size() - 1) {
+                            filterItem = filterItem + ", ";
+                        }
+                        Log.d(TAG, filterItem);
+                    }
+                    mAppliedFiltersTV.setText("Active Tags: " + filterItem);
+                    mAppliedFiltersTV.setVisibility(View.VISIBLE);
+                    // Set text here
+                } else {
+                    mAppliedFiltersTV.setVisibility(View.GONE);
+                }
+            }
+        });
+
+        // TODO: Decide if we want a dismiss button
+          /*  mBuilder.setNegativeButton("Dismiss", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.dismiss();
+                }
+            }); */
+
+        mBuilder.setNeutralButton("Clear all", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int which) {
+                for (int i = 0; i < mCheckedFilters.length; i++) {  // Loop through checked items
+                    mCheckedFilters[i] = false;
+                    mSelectedFilters.clear();
+                    mAppliedFiltersTV.setText("");
+                    mAppliedFiltersTV.setVisibility(View.GONE);
+                    // Clear text view if any
+                }
+            }
+        });
+
+        AlertDialog mDialog = mBuilder.create();
+        mDialog.show();
+    }
 }
