@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -31,6 +32,7 @@ public class GameDetailedActivity extends AppCompatActivity {
     private Game mGame;
     private Menu mMenu;
     private Toast mToast;
+    private Button mTagsButton;
 
     private TextView mAppliedFiltersTV;
     private String[] mFilterItems;
@@ -107,19 +109,17 @@ public class GameDetailedActivity extends AppCompatActivity {
             public void onChanged(Game game) {
                 if (game != null) {
                     mGameIsSaved = true;
+                    mTagsButton.setVisibility(View.VISIBLE);
+
                 } else {
                     mGameIsSaved = false;
                 }
             }
         });
 
-        Button TagsBtn = findViewById(R.id.edit_tags_btn);
-        //if(mGameIsSaved){
-            TagsBtn.setVisibility(View.VISIBLE);
-            Log.d(TAG, "Tags button should be visible");
-        //}
 
-        TagsBtn.setOnClickListener(new View.OnClickListener() {
+        mTagsButton = findViewById(R.id.edit_tags_btn);
+        mTagsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 onEditTagsClicked();
@@ -137,6 +137,7 @@ public class GameDetailedActivity extends AppCompatActivity {
         // Show save button or delete button based on whether current game is already saved.
         if (mGameIsSaved) {
             mMenu.findItem(R.id.action_remove).setVisible(true);
+            mTagsButton.setVisibility(View.VISIBLE);
         } else {
             mMenu.findItem(R.id.action_save).setVisible(true);
         }
@@ -291,7 +292,6 @@ public class GameDetailedActivity extends AppCompatActivity {
                     }
                     mAppliedFiltersTV.setText("Active Tags: " + filterItem);
                     mAppliedFiltersTV.setVisibility(View.VISIBLE);
-                    // Set text here
                 } else {
                     mAppliedFiltersTV.setVisibility(View.GONE);
                 }
@@ -314,7 +314,6 @@ public class GameDetailedActivity extends AppCompatActivity {
                     mSelectedFilters.clear();
                     mAppliedFiltersTV.setText("");
                     mAppliedFiltersTV.setVisibility(View.GONE);
-                    // Clear text view if any
                 }
             }
         });
