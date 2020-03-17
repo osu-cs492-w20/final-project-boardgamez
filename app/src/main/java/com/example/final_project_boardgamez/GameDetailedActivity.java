@@ -267,6 +267,7 @@ public class GameDetailedActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialogInterface, int position, boolean isChecked) {
                 if (isChecked) {
                     if (!mSelectedFilters.contains(position)){
+
                         mSelectedFilters.add(position);
                     }
                 } else { // Filter was unchecked
@@ -282,13 +283,30 @@ public class GameDetailedActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialogInterface, int which) {
                 String filterItem = "";
+                Log.d(TAG, "Mark All tags as FALSE");                   // TODO
+
                 if (mSelectedFilters.size() > 0) {
                     for (int i = 0; i < mSelectedFilters.size(); i++) {
                         filterItem = filterItem + mFilterItems[mSelectedFilters.get(i)];
                         if (i != mSelectedFilters.size() - 1) {
                             filterItem = filterItem + ", ";
                         }
-                        Log.d(TAG, filterItem);
+
+                        String tag = mFilterItems[mSelectedFilters.get(i)];
+                        switch(tag)
+                        {
+                            case "Owned":
+                                Log.d(TAG, "Mark Owned as TRUE");               // TODO
+                                break;
+                            case "Wishlist":
+                                Log.d(TAG, "Mark Wishlist as TRUE");            // TODO
+                                break;
+                            case "Has Played":
+                                Log.d(TAG, "Mark HasPlayed as TRUE");           // TODO
+                                break;
+                            default:
+                                System.out.println("Do Nothing");
+                        }
                     }
                     mAppliedFiltersTV.setText("Active Tags: " + filterItem);
                     mAppliedFiltersTV.setVisibility(View.VISIBLE);
