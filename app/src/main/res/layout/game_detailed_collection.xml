@@ -1,88 +1,107 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent" >
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:orientation="vertical" android:layout_width="match_parent"
-        android:layout_height="match_parent" >
-
-        <TextView
-            android:id="@+id/tv_game_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAlignment="center"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="8dp"
-            android:padding="8dp"
-            android:text="Game Title"
-            android:textColor="#000"
-            android:textSize="36sp" />
-
-        <ImageView
-            android:id="@+id/iv_game_image"
-            android:padding="8dp"
-            android:layout_gravity="bottom|center_horizontal"
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="match_parent" >
 
         <LinearLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
             android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="20dp" >
+            android:layout_height="match_parent" >
 
             <TextView
-                android:id="@+id/tv_game_players"
+                android:id="@+id/tv_game_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="8dp"
+                android:padding="8dp"
+                android:text="Game Title"
+                android:textColor="#000"
+                android:textSize="36sp" />
+
+            <LinearLayout
+                android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/iv_game_image"
+                    android:padding="8dp"
+                    android:layout_width="200dp"
+                    android:layout_height="wrap_content" />
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="20dp" >
+
+                    <TextView
+                        android:id="@+id/tv_game_players"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+                    <TextView
+                        android:id="@+id/tv_game_playtime"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+                    <TextView
+                        android:id="@+id/tv_game_min_age"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+                    <TextView
+                        android:id="@+id/tv_game_year_published"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+                    <TextView
+                        android:id="@+id/tv_applied_filters_details"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:textStyle="bold" />
+
+                    <Button
+                        android:id="@+id/edit_tags_btn"
+                        android:layout_width="100dp"
+                        android:layout_height="35dp"
+                        android:background="@drawable/edit_tags_background"
+                        android:text="Edit Tags"
+                        android:textColor="@color/colorTextIcons"
+                        android:padding="8dp"
+                        android:layout_margin="@dimen/fab_margin"
+                        android:visibility="gone"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentBottom="true"/>
+
+
+                </LinearLayout>
+
+            </LinearLayout>
+
 
             <TextView
-                android:id="@+id/tv_game_playtime"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-            <TextView
-                android:id="@+id/tv_game_min_age"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-            <TextView
-                android:id="@+id/tv_game_year_published"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:id="@+id/tv_game_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:textAlignment="textStart"
+                android:layout_gravity="start"
+                android:text="Game Description... (hardcoded in the layout)"
+                android:textSize="16sp"
+                android:textColor="#000"/>
 
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/tv_game_description"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="8dp"
-            android:textAlignment="textStart"
-            android:layout_gravity="start"
-            android:text="Game Description... (hardcoded in the layout)"
-            android:textSize="16sp"
-            android:textColor="#000"/>
+    </ScrollView>
 
-        <TextView
-            android:id="@+id/tv_applied_filters_details"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="8dp"
-            android:textSize="16dp"/>
-
-        <Button
-            android:id="@+id/edit_tags_btn"
-            android:layout_width="@dimen/fab_size"
-            android:layout_height="@dimen/fab_size"
-            android:background="@drawable/ic_tags"
-            android:padding="16dp"
-            android:layout_margin="@dimen/fab_margin"
-            android:layout_gravity="bottom|end"
-            android:visibility="invisible"/>
-
-    </LinearLayout>
-
-</ScrollView>
+</RelativeLayout>
