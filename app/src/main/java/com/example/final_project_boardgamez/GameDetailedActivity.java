@@ -278,12 +278,42 @@ public class GameDetailedActivity extends AppCompatActivity {
                     if (!mSelectedFilters.contains(mFilterItems[position])){
                         Log.d(TAG, "Position " + position);
                         mSelectedFilters.add(mFilterItems[position]);
+                        switch(mFilterItems[position])
+                        {
+                            case "Owned":
+                                mGame.tag_owned = true;
+                                break;
+                            case "Wishlist":
+                                mGame.tag_wishlist = true;
+                                break;
+                            case "Has Played":
+                                mGame.tag_played = true;
+                                break;
+                            default:
+                                System.out.println("Do Nothing");
+                        }
+                        mSavedGamesViewModel.updateSavedGame(mGame);
                     }
                 } else { // Filter was unchecked
                     if (mSelectedFilters.contains(mFilterItems[position])) {
                         Log.d(TAG, "Remove Position " + position);
                         mSelectedFilters.remove(mFilterItems[position]);
+                        switch(mFilterItems[position])
+                        {
+                            case "Owned":
+                                mGame.tag_owned = false;
+                                break;
+                            case "Wishlist":
+                                mGame.tag_wishlist = false;
+                                break;
+                            case "Has Played":
+                                mGame.tag_played = false;
+                                break;
+                            default:
+                                System.out.println("Do Nothing");
+                        }
                     }
+                    mSavedGamesViewModel.updateSavedGame(mGame);
                 }
             }
         });
@@ -302,7 +332,9 @@ public class GameDetailedActivity extends AppCompatActivity {
                 for (int i = 0; i < mCheckedFilters.length; i++) {  // Loop through checked items
                     mCheckedFilters[i] = false;
                 }
-
+                mGame.tag_played = false;
+                mGame.tag_wishlist = false;
+                mGame.tag_played = false;
                 mAppliedFiltersTV.setText("My Tags: None");
                 mSelectedFilters.clear();
                 mSavedGamesViewModel.updateSavedGame(mGame);
@@ -315,9 +347,38 @@ public class GameDetailedActivity extends AppCompatActivity {
 
     private void setTags() {
         String text = "My Tags: ";
-        mGame.tag_owned = false;
-        mGame.tag_wishlist = false;
-        mGame.tag_played = false;
+
+        Log.d(TAG, "Game tag_owned: " + mGame.tag_owned);
+        Log.d(TAG, "Game tag_wishlist: " + mGame.tag_wishlist);
+        Log.d(TAG, "Game tag_played: " + mGame.tag_played);
+
+        for (int i = 0; i < mFilterItems.length; i++) {
+            switch (mFilterItems[i]) {
+                case "Owned":
+                    if (mGame.tag_owned && !mSelectedFilters.contains(mFilterItems[i])) {
+                        mSelectedFilters.add(mFilterItems[i]);
+                    } else if (!mGame.tag_owned && mSelectedFilters.contains(mFilterItems[i])) {
+                        mSelectedFilters.remove(mFilterItems[i]);
+                    }
+                    break;
+                case "Wishlist":
+                    if (mGame.tag_wishlist && !mSelectedFilters.contains(mFilterItems[i])) {
+                        mSelectedFilters.add(mFilterItems[i]);
+                    } else if (!mGame.tag_wishlist && mSelectedFilters.contains(mFilterItems[i])) {
+                        mSelectedFilters.remove(mFilterItems[i]);
+                    }
+                    break;
+                case "Has Played":
+                    if (mGame.tag_played && !mSelectedFilters.contains(mFilterItems[i])) {
+                        mSelectedFilters.add(mFilterItems[i]);
+                    } else if (!mGame.tag_played && mSelectedFilters.contains(mFilterItems[i])) {
+                        mSelectedFilters.remove(mFilterItems[i]);
+                    }
+                    break;
+                default:
+                    System.out.println("Do Nothing");
+            }
+        }
 
         if (!mSelectedFilters.isEmpty()) {
             for (int i=0; i < mSelectedFilters.size(); i++) {
@@ -326,22 +387,6 @@ public class GameDetailedActivity extends AppCompatActivity {
                 } else {
                     text += mSelectedFilters.get(i) + ", ";
                 }
-
-                switch(mSelectedFilters.get(i))
-                {
-                    case "Owned":
-                        mGame.tag_owned = true;
-                        break;
-                    case "Wishlist":
-                        mGame.tag_wishlist = true;
-                        break;
-                    case "Has Played":
-                        mGame.tag_played = true;
-                        break;
-                    default:
-                        System.out.println("Do Nothing");
-                }
-
             }
 
             mAppliedFiltersTV.setText(text);
