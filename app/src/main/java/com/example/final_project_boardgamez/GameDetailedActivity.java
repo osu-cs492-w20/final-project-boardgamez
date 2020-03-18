@@ -122,7 +122,7 @@ public class GameDetailedActivity extends AppCompatActivity {
             }
         });
 
-        setTagsText();
+        setTags();
 
         mTagsButton = findViewById(R.id.edit_tags_btn);
         mTagsButton.setOnClickListener(new View.OnClickListener() {
@@ -292,7 +292,7 @@ public class GameDetailedActivity extends AppCompatActivity {
         mBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int which) {
-                setTagsText();
+                setTags();
             }
         });
 
@@ -313,8 +313,11 @@ public class GameDetailedActivity extends AppCompatActivity {
         mDialog.show();
     }
 
-    private void setTagsText() {
+    private void setTags() {
         String text = "My Tags: ";
+        mGame.tag_owned = false;
+        mGame.tag_wishlist = false;
+        mGame.tag_played = false;
 
         if (!mSelectedFilters.isEmpty()) {
             for (int i=0; i < mSelectedFilters.size(); i++) {
@@ -323,6 +326,22 @@ public class GameDetailedActivity extends AppCompatActivity {
                 } else {
                     text += mSelectedFilters.get(i) + ", ";
                 }
+
+                switch(mSelectedFilters.get(i))
+                {
+                    case "Owned":
+                        mGame.tag_owned = true;
+                        break;
+                    case "Wishlist":
+                        mGame.tag_wishlist = true;
+                        break;
+                    case "Has Played":
+                        mGame.tag_played = true;
+                        break;
+                    default:
+                        System.out.println("Do Nothing");
+                }
+
             }
 
             mAppliedFiltersTV.setText(text);
