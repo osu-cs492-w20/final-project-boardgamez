@@ -117,6 +117,25 @@ public class GameDetailedActivity extends AppCompatActivity {
             }
         });
 
+        String text = "Active Tags: ";
+        if(mGame.tag_owned){
+            mAppliedFiltersTV.setVisibility(View.VISIBLE);
+            Log.d(TAG, "Game is Owned");
+            text += "Owned, ";
+        }
+        if(mGame.tag_wishlist){
+            mAppliedFiltersTV.setVisibility(View.VISIBLE);
+            Log.d(TAG, "Game is on Wishlist");
+            text += "Wishlist, ";
+        }
+        if(mGame.tag_played){
+            mAppliedFiltersTV.setVisibility(View.VISIBLE);
+            Log.d(TAG, "Game is has been played");
+            text += "Has Played";
+        }
+
+        mAppliedFiltersTV.setText(text);
+
 
         mTagsButton = findViewById(R.id.edit_tags_btn);
         mTagsButton.setOnClickListener(new View.OnClickListener() {
@@ -283,7 +302,12 @@ public class GameDetailedActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialogInterface, int which) {
                 String filterItem = "";
-                Log.d(TAG, "Mark All tags as FALSE");                   // TODO
+
+                mGame.tag_owned = false;
+                mGame.tag_played = false;
+                mGame.tag_wishlist = false;
+
+                String text = "Active Tags: ";
 
                 if (mSelectedFilters.size() > 0) {
                     for (int i = 0; i < mSelectedFilters.size(); i++) {
@@ -296,19 +320,36 @@ public class GameDetailedActivity extends AppCompatActivity {
                         switch(tag)
                         {
                             case "Owned":
-                                Log.d(TAG, "Mark Owned as TRUE");               // TODO
+                                Log.d(TAG, "Mark Owned as TRUE");
+                                mGame.tag_owned = true;
                                 break;
                             case "Wishlist":
-                                Log.d(TAG, "Mark Wishlist as TRUE");            // TODO
+                                Log.d(TAG, "Mark Wishlist as TRUE");
+                                mGame.tag_wishlist = true;
                                 break;
                             case "Has Played":
-                                Log.d(TAG, "Mark HasPlayed as TRUE");           // TODO
+                                Log.d(TAG, "Mark HasPlayed as TRUE");
+                                mGame.tag_played = true;
                                 break;
                             default:
                                 System.out.println("Do Nothing");
                         }
                     }
-                    mAppliedFiltersTV.setText("Active Tags: " + filterItem);
+
+                    mSavedGamesViewModel.updateSavedGame(mGame);
+
+                    if(mGame.tag_owned){
+                        text += "Owned, ";
+                    }
+                    if(mGame.tag_wishlist){
+                        text += "Wishlist, ";
+                    }
+                    if(mGame.tag_played){
+                        text += "Has Played";
+                    }
+
+                    //mAppliedFiltersTV.setText("Active Tags: " + filterItem);
+                    mAppliedFiltersTV.setText(text);
                     mAppliedFiltersTV.setVisibility(View.VISIBLE);
                 } else {
                     mAppliedFiltersTV.setVisibility(View.GONE);

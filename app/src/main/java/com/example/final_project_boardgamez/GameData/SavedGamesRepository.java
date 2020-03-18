@@ -27,6 +27,15 @@ public class SavedGamesRepository {
         new DeleteAsyncTask(mSavedGamesDao).execute(game);
     }
 
+    public void updateGame(Game game) {
+        Log.d(TAG, "Updating game...");
+        new UpdateAsyncTask(mSavedGamesDao).execute(game);
+    }
+
+//    public void setTagBool(String gameName, boolean bool) {
+//        mSavedGamesDao.setTagBool(gameName, bool);
+//    }
+
     public LiveData<Game> getSavedGameByName(String name) {
         return mSavedGamesDao.getGameByName(name);
     }
@@ -59,6 +68,19 @@ public class SavedGamesRepository {
         @Override
         protected Void doInBackground(Game... games) {
             mAsyncTaskDao.delete(games[0]);
+            return null;
+        }
+    }
+
+    private static class UpdateAsyncTask extends AsyncTask<Game, Void, Void> {
+        private SavedGamesDao mAsyncTaskDao;
+        UpdateAsyncTask(SavedGamesDao savedGamesDao) {
+            mAsyncTaskDao = savedGamesDao;
+        }
+
+        @Override
+        protected Void doInBackground(Game... games) {
+            mAsyncTaskDao.update(games[0]);
             return null;
         }
     }
