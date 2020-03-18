@@ -56,6 +56,7 @@ public class GameDetailedActivity extends AppCompatActivity {
         mFilterItems = getResources().getStringArray(R.array.filter_list);
         Log.d(TAG, "Filter Items length: " + mFilterItems.length);
         mCheckedFilters = new boolean[mFilterItems.length];
+
         mAppliedFiltersTV = findViewById(R.id.tv_applied_filters_details);
         mAppliedFiltersTV.setVisibility(View.GONE);
 
@@ -182,6 +183,10 @@ public class GameDetailedActivity extends AppCompatActivity {
                             .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
+                                    mGame.tag_owned = false;
+                                    mGame.tag_wishlist = false;
+                                    mGame.tag_played = false;
+                                    mSavedGamesViewModel.updateSavedGame(mGame);
                                     mSavedGamesViewModel.deleteSavedGame(mGame);
                                     for (int j = 0; j < mCheckedFilters.length; j++) {  // Loop through checked items
                                         mCheckedFilters[j] = false;
@@ -332,7 +337,8 @@ public class GameDetailedActivity extends AppCompatActivity {
                 for (int i = 0; i < mCheckedFilters.length; i++) {  // Loop through checked items
                     mCheckedFilters[i] = false;
                 }
-                mGame.tag_played = false;
+
+                mGame.tag_owned = false;
                 mGame.tag_wishlist = false;
                 mGame.tag_played = false;
                 mAppliedFiltersTV.setText("My Tags: None");
@@ -360,6 +366,7 @@ public class GameDetailedActivity extends AppCompatActivity {
                     } else if (!mGame.tag_owned && mSelectedFilters.contains(mFilterItems[i])) {
                         mSelectedFilters.remove(mFilterItems[i]);
                     }
+                    mCheckedFilters[0] = mGame.tag_owned;
                     break;
                 case "Wishlist":
                     if (mGame.tag_wishlist && !mSelectedFilters.contains(mFilterItems[i])) {
@@ -367,6 +374,7 @@ public class GameDetailedActivity extends AppCompatActivity {
                     } else if (!mGame.tag_wishlist && mSelectedFilters.contains(mFilterItems[i])) {
                         mSelectedFilters.remove(mFilterItems[i]);
                     }
+                    mCheckedFilters[1] = mGame.tag_wishlist;
                     break;
                 case "Has Played":
                     if (mGame.tag_played && !mSelectedFilters.contains(mFilterItems[i])) {
@@ -374,6 +382,7 @@ public class GameDetailedActivity extends AppCompatActivity {
                     } else if (!mGame.tag_played && mSelectedFilters.contains(mFilterItems[i])) {
                         mSelectedFilters.remove(mFilterItems[i]);
                     }
+                    mCheckedFilters[2] = mGame.tag_played;
                     break;
                 default:
                     System.out.println("Do Nothing");
