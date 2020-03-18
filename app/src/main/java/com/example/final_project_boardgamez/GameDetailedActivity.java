@@ -332,7 +332,7 @@ public class GameDetailedActivity extends AppCompatActivity {
                 for (int i = 0; i < mCheckedFilters.length; i++) {  // Loop through checked items
                     mCheckedFilters[i] = false;
                 }
-                mGame.tag_played = false;
+                mGame.tag_owned = false;
                 mGame.tag_wishlist = false;
                 mGame.tag_played = false;
                 mAppliedFiltersTV.setText("My Tags: None");
