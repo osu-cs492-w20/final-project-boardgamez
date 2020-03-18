@@ -27,6 +27,11 @@ public class BarcodeSpiderUtils {
         String publisher;
         String parent_category;
         String description;
+        BSItemStores[] Stores;
+    }
+
+    static class BSItemStores {
+        String image;
     }
 
     public static String buildUPCLookupURL(String item_upc) {
@@ -40,15 +45,22 @@ public class BarcodeSpiderUtils {
     public static ArrayList<Game> parseGameJSON(String json) {
         Gson gson = new Gson();
         BSUPCLookupResults results = gson.fromJson(json, BSUPCLookupResults.class);
-        if (results != null && results.item_attributes != null && results.item_attributes.parent_category.equals("Toys & Games")) {
-            ArrayList<Game> gameList = new ArrayList<>();
-            Game game = new Game();
+        if (results != null && results.item_attributes != null ) {
+            if (results.item_attributes.parent_category.contains("Game") || results.item_attributes.parent_category.contains("Toy")) {
+                ArrayList<Game> gameList = new ArrayList<>();
+                Game game = new Game();
 
-            game.name = results.item_attributes.title;
-            game.description = results.item_attributes.description;
-            game.image_url = results.item_attributes.image;
-            gameList.add(game);
-            return gameList;
+                game.name = results.item_attributes.title;
+                game.description = results.item_attributes.description;
+                game.image_url = results.item_attributes.image;
+                if (results.item_attributes.Stores != null && results.item_attributes.Stores[0].image != null) {
+                    game.image_url = results.item_attributes.Stores[0].image;
+                }
+                gameList.add(game);
+                return gameList;
+            } else {
+                return null;
+            }
         } else {
             return null;
         }

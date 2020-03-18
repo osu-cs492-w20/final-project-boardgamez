@@ -1,5 +1,6 @@
 /*
- * Copyright (C) The Android Open Source Project
+ * Original work Copyright (C) The Android Open Source Project
+ * Modified work Copyright 2020 Terri Hewitt
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +15,7 @@
  * limitations under the License.
  */
 
-/* NOTICE: This file has been modified from its original source to use compatible versions of Android libraries */
+/* Disclaimer: This file has been modified from its original work to use updated versions of Android libraries */
 
 package com.notbytes.barcode_reader.camera;
 
