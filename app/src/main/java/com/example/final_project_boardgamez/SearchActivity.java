@@ -149,7 +149,7 @@ public class SearchActivity extends AppCompatActivity implements GameManagerAdap
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode != Activity.RESULT_OK) {
-            //mGamesViewModel.loadScannedGame(SearchActivity.this, "722301926246");  // TODO: HARDCODED UPC for testing API on emulator
+            mGamesViewModel.loadScannedGame(SearchActivity.this, "722301926246");  // TODO: HARDCODED UPC for testing API on emulator
             return;
         }
         if (requestCode == BARCODE_READER_ACTIVITY_REQUEST && data != null) {

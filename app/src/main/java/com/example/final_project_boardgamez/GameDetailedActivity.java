@@ -325,7 +325,6 @@ public class GameDetailedActivity extends AppCompatActivity {
                 setTags();
             }
         });
-
         mBuilder.setNeutralButton("Clear all", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int which) {
