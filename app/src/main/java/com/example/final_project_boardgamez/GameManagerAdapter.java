@@ -85,6 +85,15 @@ public class GameManagerAdapter extends RecyclerView.Adapter<GameManagerAdapter.
         if (gameDetails.game_tag != null) {
             gameTag = "Tags: " + gameDetails.game_tag;
         }
+//        if (gameDetails.game_tag1 != null) {
+//            gameTag = "Tags: " + gameDetails.game_tag1;
+//        }
+//        if (gameDetails.game_tag2 != null) {
+//            gameTag = ", " + gameDetails.game_tag2;
+//        }
+//        if (gameDetails.game_tag3 != null) {
+//            gameTag = ", " + gameDetails.game_tag3;
+//        }
         // String gameTag = gameDetails.description;
         Log.d(TAG, "Adapter: Bind Game Name = " + gameDetails.name);
 

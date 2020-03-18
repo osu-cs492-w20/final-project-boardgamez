@@ -8,17 +8,21 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.bumptech.glide.Glide;
 import com.example.final_project_boardgamez.GameData.Game;
+
+import java.util.ArrayList;
 
 public class GameDetailedActivity extends AppCompatActivity {
     public static final String EXTRA_GAME_INFO = "Game";
@@ -28,6 +32,12 @@ public class GameDetailedActivity extends AppCompatActivity {
     private Game mGame;
     private Menu mMenu;
     private Toast mToast;
+    private Button mTagsButton;
+
+    private TextView mAppliedFiltersTV;
+    private String[] mFilterItems;
+    private boolean[] mCheckedFilters;
+    ArrayList<Integer> mSelectedFilters = new ArrayList<>();
 
     private boolean mGameIsSaved = false;
 
@@ -40,6 +50,11 @@ public class GameDetailedActivity extends AppCompatActivity {
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Game Details");
+
+        mFilterItems = getResources().getStringArray(R.array.filter_list);
+        mCheckedFilters = new boolean[mFilterItems.length];
+        mAppliedFiltersTV = findViewById(R.id.tv_applied_filters_details);
+        mAppliedFiltersTV.setVisibility(View.GONE);
 
         mToast = null;
 
@@ -94,11 +109,42 @@ public class GameDetailedActivity extends AppCompatActivity {
             public void onChanged(Game game) {
                 if (game != null) {
                     mGameIsSaved = true;
+                    mTagsButton.setVisibility(View.VISIBLE);
+                    mAppliedFiltersTV.setVisibility(View.VISIBLE);
                 } else {
                     mGameIsSaved = false;
                 }
             }
         });
+
+
+        String text = "Active Tags: ";
+        if(mGame.tag_owned){
+            Log.d(TAG, "Game is Owned");
+            text += "Owned, ";
+        }
+        if(mGame.tag_wishlist){
+            Log.d(TAG, "Game is on Wishlist");
+            text += "Wishlist, ";
+        }
+        if(mGame.tag_played){
+            Log.d(TAG, "Game is has been played");
+            text += "Has Played";
+        }
+        if(!mGame.tag_played && !mGame.tag_owned && !mGame.tag_wishlist){
+            text += "None";
+        }
+
+        mAppliedFiltersTV.setText(text);
+
+        mTagsButton = findViewById(R.id.edit_tags_btn);
+        mTagsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onEditTagsClicked();
+            }
+        });
+
 
     }
 
@@ -110,6 +156,7 @@ public class GameDetailedActivity extends AppCompatActivity {
         // Show save button or delete button based on whether current game is already saved.
         if (mGameIsSaved) {
             mMenu.findItem(R.id.action_remove).setVisible(true);
+            mTagsButton.setVisibility(View.VISIBLE);
         } else {
             mMenu.findItem(R.id.action_save).setVisible(true);
         }
@@ -217,7 +264,6 @@ public class GameDetailedActivity extends AppCompatActivity {
         return true;
     }
 
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
@@ -229,4 +275,106 @@ public class GameDetailedActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    private void onEditTagsClicked() {
+        AlertDialog.Builder mBuilder = new AlertDialog.Builder(GameDetailedActivity.this);
+        mBuilder.setTitle("Edit Tags");
+        mBuilder.setMultiChoiceItems(mFilterItems, mCheckedFilters, new DialogInterface.OnMultiChoiceClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int position, boolean isChecked) {
+                if (isChecked) {
+                    if (!mSelectedFilters.contains(position)){
+
+                        mSelectedFilters.add(position);
+                    }
+                } else { // Filter was unchecked
+                    if (mSelectedFilters.contains(position)) {
+                        mSelectedFilters.remove(position);
+                    }
+                }
+            }
+        });
+
+        mBuilder.setCancelable(false);
+        mBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int which) {
+                String filterItem = "";
+
+                mGame.tag_owned = false;
+                mGame.tag_played = false;
+                mGame.tag_wishlist = false;
+
+                String text = "Active Tags: ";
+
+                if (mSelectedFilters.size() > 0) {
+                    for (int i = 0; i < mSelectedFilters.size(); i++) {
+                        filterItem = filterItem + mFilterItems[mSelectedFilters.get(i)];
+                        if (i != mSelectedFilters.size() - 1) {
+                            filterItem = filterItem + ", ";
+                        }
+
+                        String tag = mFilterItems[mSelectedFilters.get(i)];
+                        switch(tag)
+                        {
+                            case "Owned":
+                                mGame.tag_owned = true;
+                                break;
+                            case "Wishlist":
+                                mGame.tag_wishlist = true;
+                                break;
+                            case "Has Played":
+                                mGame.tag_played = true;
+                                break;
+                            default:
+                                System.out.println("Do Nothing");
+                        }
+                    }
+
+                    mSavedGamesViewModel.updateSavedGame(mGame);
+
+                    if(mGame.tag_owned){
+                        text += "Owned, ";
+                    }
+                    if(mGame.tag_wishlist){
+                        text += "Wishlist, ";
+                    }
+                    if(mGame.tag_played){
+                        text += "Has Played";
+                    }
+
+                    mAppliedFiltersTV.setText(text);
+                    mAppliedFiltersTV.setVisibility(View.VISIBLE);
+                } else {
+                    mAppliedFiltersTV.setVisibility(View.GONE);
+                }
+            }
+        });
+
+        // TODO: Decide if we want a dismiss button
+          /*  mBuilder.setNegativeButton("Dismiss", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.dismiss();
+                }
+            }); */
+
+        mBuilder.setNeutralButton("Clear all", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int which) {
+                for (int i = 0; i < mCheckedFilters.length; i++) {  // Loop through checked items
+                    mCheckedFilters[i] = false;
+                    mSelectedFilters.clear();
+                    mAppliedFiltersTV.setText("");
+                    mAppliedFiltersTV.setVisibility(View.GONE);
+                }
+                mGame.tag_owned = false;
+                mGame.tag_played = false;
+                mGame.tag_wishlist = false;
+                mSavedGamesViewModel.updateSavedGame(mGame);
+            }
+        });
+
+        AlertDialog mDialog = mBuilder.create();
+        mDialog.show();
+    }
 }

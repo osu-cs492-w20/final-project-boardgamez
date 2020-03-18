@@ -14,6 +14,7 @@ public class BarcodeSpiderUtils {
     private final static String BS_TOKEN_QUERY_PARAM = "token";
     private final static String BS_UPC_QUERY_PARAM = "upc";
     private final static String BS_TOKEN = "f81deb6218e69ad0b97c";
+    private final static String GLOOMHAVEN_UPC = "019962194719";
 
     static class BSUPCLookupResults {
         BSItemAttributes item_attributes;

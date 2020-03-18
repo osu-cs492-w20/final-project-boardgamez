@@ -26,6 +26,10 @@ public class SavedGamesViewModel extends AndroidViewModel {
         mSavedGamesRepository.deleteGame(game);
     }
 
+    public void updateSavedGame(Game game){
+        mSavedGamesRepository.updateGame(game);
+    }
+
     public LiveData<List<Game>> getAllSavedGames() {
         return mSavedGamesRepository.getAllSavedGames();
     }

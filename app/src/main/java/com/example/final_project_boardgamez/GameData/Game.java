@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey;
 
 import java.io.Serializable;
 
-@Entity(tableName = "games")
+@Entity(tableName = "games_v2")
 public class Game implements Serializable {
     @PrimaryKey
     @NonNull
@@ -22,4 +22,8 @@ public class Game implements Serializable {
     public int min_playtime;
     public int max_playtime;
     public int min_age;
+
+    public boolean tag_owned;
+    public boolean tag_played;
+    public boolean tag_wishlist;
 }
