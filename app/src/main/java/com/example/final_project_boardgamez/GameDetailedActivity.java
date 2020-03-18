@@ -23,6 +23,7 @@ import com.bumptech.glide.Glide;
 import com.example.final_project_boardgamez.GameData.Game;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class GameDetailedActivity extends AppCompatActivity {
     public static final String EXTRA_GAME_INFO = "Game";
@@ -36,8 +37,8 @@ public class GameDetailedActivity extends AppCompatActivity {
 
     private TextView mAppliedFiltersTV;
     private String[] mFilterItems;
+    private ArrayList<String> mSelectedFilters;
     private boolean[] mCheckedFilters;
-    ArrayList<Integer> mSelectedFilters = new ArrayList<>();
 
     private boolean mGameIsSaved = false;
 
@@ -51,7 +52,9 @@ public class GameDetailedActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Game Details");
 
+        mSelectedFilters = new ArrayList<>();
         mFilterItems = getResources().getStringArray(R.array.filter_list);
+        Log.d(TAG, "Filter Items length: " + mFilterItems.length);
         mCheckedFilters = new boolean[mFilterItems.length];
         mAppliedFiltersTV = findViewById(R.id.tv_applied_filters_details);
         mAppliedFiltersTV.setVisibility(View.GONE);
@@ -113,29 +116,13 @@ public class GameDetailedActivity extends AppCompatActivity {
                     mAppliedFiltersTV.setVisibility(View.VISIBLE);
                 } else {
                     mGameIsSaved = false;
+                    mTagsButton.setVisibility(View.GONE);
+                    mAppliedFiltersTV.setVisibility(View.INVISIBLE);
                 }
             }
         });
 
-
-        String text = "Active Tags: ";
-        if(mGame.tag_owned){
-            Log.d(TAG, "Game is Owned");
-            text += "Owned, ";
-        }
-        if(mGame.tag_wishlist){
-            Log.d(TAG, "Game is on Wishlist");
-            text += "Wishlist, ";
-        }
-        if(mGame.tag_played){
-            Log.d(TAG, "Game is has been played");
-            text += "Has Played";
-        }
-        if(!mGame.tag_played && !mGame.tag_owned && !mGame.tag_wishlist){
-            text += "None";
-        }
-
-        mAppliedFiltersTV.setText(text);
+        setTags();
 
         mTagsButton = findViewById(R.id.edit_tags_btn);
         mTagsButton.setOnClickListener(new View.OnClickListener() {
@@ -144,8 +131,6 @@ public class GameDetailedActivity extends AppCompatActivity {
                 onEditTagsClicked();
             }
         });
-
-
     }
 
     @Override
@@ -159,6 +144,7 @@ public class GameDetailedActivity extends AppCompatActivity {
             mTagsButton.setVisibility(View.VISIBLE);
         } else {
             mMenu.findItem(R.id.action_save).setVisible(true);
+            mTagsButton.setVisibility(View.GONE);
         }
 
         // Setup the click listener for the save button.
@@ -197,6 +183,13 @@ public class GameDetailedActivity extends AppCompatActivity {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
                                     mSavedGamesViewModel.deleteSavedGame(mGame);
+                                    for (int j = 0; j < mCheckedFilters.length; j++) {  // Loop through checked items
+                                        mCheckedFilters[j] = false;
+                                    }
+
+                                    mAppliedFiltersTV.setText("My Tags: None");
+                                    mSelectedFilters.clear();
+
                                     mGameIsSaved = !mGameIsSaved;
                                     mMenu.findItem(R.id.action_remove).setVisible(false);
                                     mMenu.findItem(R.id.action_save).setVisible(true);
@@ -282,13 +275,14 @@ public class GameDetailedActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialogInterface, int position, boolean isChecked) {
                 if (isChecked) {
-                    if (!mSelectedFilters.contains(position)){
-
-                        mSelectedFilters.add(position);
+                    if (!mSelectedFilters.contains(mFilterItems[position])){
+                        Log.d(TAG, "Position " + position);
+                        mSelectedFilters.add(mFilterItems[position]);
                     }
                 } else { // Filter was unchecked
-                    if (mSelectedFilters.contains(position)) {
-                        mSelectedFilters.remove(position);
+                    if (mSelectedFilters.contains(mFilterItems[position])) {
+                        Log.d(TAG, "Remove Position " + position);
+                        mSelectedFilters.remove(mFilterItems[position]);
                     }
                 }
             }
@@ -298,83 +292,62 @@ public class GameDetailedActivity extends AppCompatActivity {
         mBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int which) {
-                String filterItem = "";
-
-                mGame.tag_owned = false;
-                mGame.tag_played = false;
-                mGame.tag_wishlist = false;
-
-                String text = "Active Tags: ";
-
-                if (mSelectedFilters.size() > 0) {
-                    for (int i = 0; i < mSelectedFilters.size(); i++) {
-                        filterItem = filterItem + mFilterItems[mSelectedFilters.get(i)];
-                        if (i != mSelectedFilters.size() - 1) {
-                            filterItem = filterItem + ", ";
-                        }
-
-                        String tag = mFilterItems[mSelectedFilters.get(i)];
-                        switch(tag)
-                        {
-                            case "Owned":
-                                mGame.tag_owned = true;
-                                break;
-                            case "Wishlist":
-                                mGame.tag_wishlist = true;
-                                break;
-                            case "Has Played":
-                                mGame.tag_played = true;
-                                break;
-                            default:
-                                System.out.println("Do Nothing");
-                        }
-                    }
-
-                    mSavedGamesViewModel.updateSavedGame(mGame);
-
-                    if(mGame.tag_owned){
-                        text += "Owned, ";
-                    }
-                    if(mGame.tag_wishlist){
-                        text += "Wishlist, ";
-                    }
-                    if(mGame.tag_played){
-                        text += "Has Played";
-                    }
-
-                    mAppliedFiltersTV.setText(text);
-                    mAppliedFiltersTV.setVisibility(View.VISIBLE);
-                } else {
-                    mAppliedFiltersTV.setVisibility(View.GONE);
-                }
+                setTags();
             }
         });
-
-        // TODO: Decide if we want a dismiss button
-          /*  mBuilder.setNegativeButton("Dismiss", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    dialogInterface.dismiss();
-                }
-            }); */
-
         mBuilder.setNeutralButton("Clear all", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int which) {
                 for (int i = 0; i < mCheckedFilters.length; i++) {  // Loop through checked items
                     mCheckedFilters[i] = false;
-                    mSelectedFilters.clear();
-                    mAppliedFiltersTV.setText("");
-                    mAppliedFiltersTV.setVisibility(View.GONE);
                 }
-                mGame.tag_owned = false;
-                mGame.tag_played = false;
-                mGame.tag_wishlist = false;
+
+                mAppliedFiltersTV.setText("My Tags: None");
+                mSelectedFilters.clear();
                 mSavedGamesViewModel.updateSavedGame(mGame);
             }
         });
 
         AlertDialog mDialog = mBuilder.create();
         mDialog.show();
+    }
+
+    private void setTags() {
+        String text = "My Tags: ";
+        mGame.tag_owned = false;
+        mGame.tag_wishlist = false;
+        mGame.tag_played = false;
+
+        if (!mSelectedFilters.isEmpty()) {
+            for (int i=0; i < mSelectedFilters.size(); i++) {
+                if (i == (mSelectedFilters.size() - 1) ) {
+                    text += mSelectedFilters.get(i);
+                } else {
+                    text += mSelectedFilters.get(i) + ", ";
+                }
+
+                switch(mSelectedFilters.get(i))
+                {
+                    case "Owned":
+                        mGame.tag_owned = true;
+                        break;
+                    case "Wishlist":
+                        mGame.tag_wishlist = true;
+                        break;
+                    case "Has Played":
+                        mGame.tag_played = true;
+                        break;
+                    default:
+                        System.out.println("Do Nothing");
+                }
+
+            }
+
+            mAppliedFiltersTV.setText(text);
+            mAppliedFiltersTV.setVisibility(View.VISIBLE);
+        } else {
+            mAppliedFiltersTV.setText(text + " None");
+            mAppliedFiltersTV.setVisibility(View.VISIBLE);
+        }
     }
 }

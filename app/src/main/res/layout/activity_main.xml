@@ -13,6 +13,7 @@
         android:layout_height="?attr/actionBarSize"
         android:background="@color/colorPrimary"
         app:title="My Collection"
+        app:titleTextAppearance="@style/ToolbarTitle"
         android:elevation="4dp"
         android:theme="@style/ThemeOverlay.AppCompat.Dark"/>
 
