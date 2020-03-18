@@ -66,6 +66,7 @@ public class MainActivity extends AppCompatActivity implements GameManagerAdapte
         mAdapterRV = new GameManagerAdapter(this);
         mMainGameListRV.setAdapter(mAdapterRV);
 
+
         mSavedGamesViewModel = new ViewModelProvider(
                 this,
                 new ViewModelProvider.AndroidViewModelFactory(getApplication())
@@ -147,6 +148,11 @@ public class MainActivity extends AppCompatActivity implements GameManagerAdapte
         mBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int which) {
+
+                List<Game> gameList = mAdapterRV.getGameList();         // Create a copy of games
+                Log.d(TAG, "making new list");
+                List<Game> gameListNew = new ArrayList<>();
+
                 String filterItem = "";
                 if (mSelectedFilters.size() > 0) {
                     for (int i = 0; i < mSelectedFilters.size(); i++) {
@@ -154,7 +160,37 @@ public class MainActivity extends AppCompatActivity implements GameManagerAdapte
                         if (i != mSelectedFilters.size() - 1) {
                             filterItem = filterItem + ", ";
                         }
-                        Log.d(TAG, filterItem);
+                        //Log.d(TAG, filterItem);
+                        Log.d(TAG, mFilterItems[mSelectedFilters.get(i)]);
+
+                        if(mFilterItems[mSelectedFilters.get(i)].equals("Owned")) {
+                            for (int j = 0; j < gameList.size(); j++) {
+                                if (gameList.get(j).tag_owned && !gameListNew.contains(gameList.get(j))){
+                                    gameListNew.add(gameList.get(j));
+                                }
+                            }
+                        }
+                        if(mFilterItems[mSelectedFilters.get(i)].equals("Wishlist")) {
+                            for (int j = 0; j < gameList.size(); j++) {
+                                if (gameList.get(j).tag_wishlist&& !gameListNew.contains(gameList.get(j))){
+                                    gameListNew.add(gameList.get(j));
+                                }
+                            }
+                        }
+                        if(mFilterItems[mSelectedFilters.get(i)].equals("Has Played")) {
+                            for (int j = 0; j < gameList.size(); j++) {
+                                if (gameList.get(j).tag_owned&& !gameListNew.contains(gameList.get(j))){
+                                    gameListNew.add(gameList.get(j));
+                                }
+                            }
+                        }
+
+                        Log.d(TAG, String.valueOf(gameListNew.size()));
+                        for (int j = 0; j < gameListNew.size(); j++) {
+                            Log.d(TAG, gameList.get(j).name);
+                        }
+
+
                     }
                     mAppliedFiltersTV.setText("Tag filters: " + filterItem);
                     mAppliedFiltersTV.setVisibility(View.VISIBLE);
@@ -162,16 +198,11 @@ public class MainActivity extends AppCompatActivity implements GameManagerAdapte
                 } else {
                     mAppliedFiltersTV.setVisibility(View.GONE);
                 }
+
+
+
             }
         });
-
-        // TODO: Decide if we want a dismiss button
-          /*  mBuilder.setNegativeButton("Dismiss", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    dialogInterface.dismiss();
-                }
-            }); */
 
         mBuilder.setNeutralButton("Clear all", new DialogInterface.OnClickListener() {
             @Override
