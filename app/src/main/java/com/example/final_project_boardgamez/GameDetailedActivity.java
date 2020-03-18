@@ -320,15 +320,12 @@ public class GameDetailedActivity extends AppCompatActivity {
                         switch(tag)
                         {
                             case "Owned":
-                                Log.d(TAG, "Mark Owned as TRUE");
                                 mGame.tag_owned = true;
                                 break;
                             case "Wishlist":
-                                Log.d(TAG, "Mark Wishlist as TRUE");
                                 mGame.tag_wishlist = true;
                                 break;
                             case "Has Played":
-                                Log.d(TAG, "Mark HasPlayed as TRUE");
                                 mGame.tag_played = true;
                                 break;
                             default:
@@ -348,7 +345,6 @@ public class GameDetailedActivity extends AppCompatActivity {
                         text += "Has Played";
                     }
 
-                    //mAppliedFiltersTV.setText("Active Tags: " + filterItem);
                     mAppliedFiltersTV.setText(text);
                     mAppliedFiltersTV.setVisibility(View.VISIBLE);
                 } else {
@@ -374,6 +370,10 @@ public class GameDetailedActivity extends AppCompatActivity {
                     mAppliedFiltersTV.setText("");
                     mAppliedFiltersTV.setVisibility(View.GONE);
                 }
+                mGame.tag_owned = false;
+                mGame.tag_played = false;
+                mGame.tag_wishlist = false;
+                mSavedGamesViewModel.updateSavedGame(mGame);
             }
         });
 

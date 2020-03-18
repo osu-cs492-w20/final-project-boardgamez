@@ -20,9 +20,6 @@ public interface SavedGamesDao {
     @Update
     void update(Game game);
 
-//    @Query("UPDATE games_v2 SET tag_owned = :bool WHERE name = :gameName")
-//    void setTagBool(String gameName, boolean bool);
-
     @Query("SELECT * FROM games_v2")
     LiveData<List<Game>> getAllSavedGames();
 

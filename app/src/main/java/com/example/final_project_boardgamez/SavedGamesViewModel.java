@@ -30,10 +30,6 @@ public class SavedGamesViewModel extends AndroidViewModel {
         mSavedGamesRepository.updateGame(game);
     }
 
-//    public void setTagBool(String gameName, boolean bool){
-//        mSavedGamesRepository.setTagBool(gameName, bool);
-//    }
-
     public LiveData<List<Game>> getAllSavedGames() {
         return mSavedGamesRepository.getAllSavedGames();
     }

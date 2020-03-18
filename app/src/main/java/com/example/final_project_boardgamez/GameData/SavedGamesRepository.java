@@ -32,10 +32,6 @@ public class SavedGamesRepository {
         new UpdateAsyncTask(mSavedGamesDao).execute(game);
     }
 
-//    public void setTagBool(String gameName, boolean bool) {
-//        mSavedGamesDao.setTagBool(gameName, bool);
-//    }
-
     public LiveData<Game> getSavedGameByName(String name) {
         return mSavedGamesDao.getGameByName(name);
     }
