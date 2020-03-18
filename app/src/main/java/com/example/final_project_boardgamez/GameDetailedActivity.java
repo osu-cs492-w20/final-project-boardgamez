@@ -183,6 +183,10 @@ public class GameDetailedActivity extends AppCompatActivity {
                             .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
+                                    mGame.tag_owned = false;
+                                    mGame.tag_wishlist = false;
+                                    mGame.tag_played = false;
+                                    mSavedGamesViewModel.updateSavedGame(mGame);
                                     mSavedGamesViewModel.deleteSavedGame(mGame);
                                     for (int j = 0; j < mCheckedFilters.length; j++) {  // Loop through checked items
                                         mCheckedFilters[j] = false;
