@@ -330,12 +330,14 @@ public class GameDetailedActivity extends AppCompatActivity {
                 setTags();
             }
         });
+
         mBuilder.setNeutralButton("Clear all", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int which) {
                 for (int i = 0; i < mCheckedFilters.length; i++) {  // Loop through checked items
                     mCheckedFilters[i] = false;
                 }
+
                 mGame.tag_owned = false;
                 mGame.tag_wishlist = false;
                 mGame.tag_played = false;

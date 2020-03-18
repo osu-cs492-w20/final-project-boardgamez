@@ -21,23 +21,7 @@ public class GameManagerAdapter extends RecyclerView.Adapter<GameManagerAdapter.
 
     private static final String TAG = GameManagerAdapter.class.getSimpleName();
     private List<Game> mGameDetails;
-   // private ArrayList<String> mGameTags;
     private OnGameClickListener mGameClickListener;
-
-
-   /* final String[] dummyTagData = {     // TODO: Make 2D array to store tags
-            "Owns",
-            "Wishlist, Party game",
-            "Owns",
-            "",
-            "Has played, Family friendly",
-            "Wishlist",
-            "Has played",
-            "",
-            "Owns"
-    };    */                      // Game Crashes if you add more than these 9 Game Tags
-
-
 
     public interface OnGameClickListener {
         void onGameClicked(Game game);
@@ -46,7 +30,6 @@ public class GameManagerAdapter extends RecyclerView.Adapter<GameManagerAdapter.
     public GameManagerAdapter(OnGameClickListener listener) {
         mGameClickListener = listener;
         mGameDetails = new ArrayList<>();
-      //  mGameTags = new ArrayList<>(Arrays.asList(dummyTagData));
         Log.d(TAG, "Adapter: Created an ArrayList");
     }
 
@@ -54,6 +37,10 @@ public class GameManagerAdapter extends RecyclerView.Adapter<GameManagerAdapter.
         Log.d(TAG, "Adapter: Adding Game to ArrayList");
         mGameDetails.add(game);
         notifyDataSetChanged();
+    }
+
+    public List<Game> getGameList(){
+        return mGameDetails;
     }
 
     public void updateGameCollection(List<Game> gameList) {
@@ -85,21 +72,7 @@ public class GameManagerAdapter extends RecyclerView.Adapter<GameManagerAdapter.
         if (gameDetails.game_tag != null) {
             gameTag = "Tags: " + gameDetails.game_tag;
         }
-//        if (gameDetails.game_tag1 != null) {
-//            gameTag = "Tags: " + gameDetails.game_tag1;
-//        }
-//        if (gameDetails.game_tag2 != null) {
-//            gameTag = ", " + gameDetails.game_tag2;
-//        }
-//        if (gameDetails.game_tag3 != null) {
-//            gameTag = ", " + gameDetails.game_tag3;
-//        }
-        // String gameTag = gameDetails.description;
         Log.d(TAG, "Adapter: Bind Game Name = " + gameDetails.name);
-
-        //holder.mGameDetailsTV.setText(gameDetails.name);
-        //holder.mGameTagTV.setText(gameTag);
-        //holder.mGameThumbnailIV.setImageResource(R.mipmap.ic_dummy_thumbnail);          // Still Hardcoded Image
         holder.bind(gameDetails, gameTag);
     }
 
@@ -120,7 +93,7 @@ public class GameManagerAdapter extends RecyclerView.Adapter<GameManagerAdapter.
         @Override
         public void onClick(View v) {
             Log.d(TAG, "In on click");
-            Game game = mGameDetails.get(getAdapterPosition());         // When we are ready for real data
+            Game game = mGameDetails.get(getAdapterPosition());
             mGameClickListener.onGameClicked(game);
         }
 
