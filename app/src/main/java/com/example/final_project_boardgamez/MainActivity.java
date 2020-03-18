@@ -29,7 +29,8 @@ public class MainActivity extends AppCompatActivity implements GameManagerAdapte
     private static final String TAG = MainActivity.class.getSimpleName();
 
     private RecyclerView mMainGameListRV;
-    private GameManagerAdapter mAdapterRV;                  // Changed to a custom adapter
+    private GameManagerAdapter mAdapterRV;
+    private GameManagerAdapter mFilteredAdapterRV;
     private RecyclerView.LayoutManager mLayoutManagerRV;
     private SavedGamesViewModel mSavedGamesViewModel;
     private TextView mAppliedFiltersTV;
@@ -63,6 +64,7 @@ public class MainActivity extends AppCompatActivity implements GameManagerAdapte
         mMainGameListRV.setLayoutManager(mLayoutManagerRV);
 
         /* Setup adapter */
+        mFilteredAdapterRV = new GameManagerAdapter(this);
         mAdapterRV = new GameManagerAdapter(this);
         mMainGameListRV.setAdapter(mAdapterRV);
 
@@ -79,16 +81,12 @@ public class MainActivity extends AppCompatActivity implements GameManagerAdapte
             }
         });
 
-        Log.d(TAG, "Main: Adapter is size: " + mAdapterRV.getItemCount());
-
         Button fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 Intent intent = new Intent(getApplicationContext(), SearchActivity.class);
                 startActivity(intent);
-
             }
         });
 
@@ -166,6 +164,7 @@ public class MainActivity extends AppCompatActivity implements GameManagerAdapte
                         if(mFilterItems[mSelectedFilters.get(i)].equals("Owned")) {
                             for (int j = 0; j < gameList.size(); j++) {
                                 if (gameList.get(j).tag_owned && !gameListNew.contains(gameList.get(j))){
+                                    Log.d(TAG, "Adding Game1: " + gameList.get(j).name);
                                     gameListNew.add(gameList.get(j));
                                 }
                             }
@@ -173,23 +172,27 @@ public class MainActivity extends AppCompatActivity implements GameManagerAdapte
                         if(mFilterItems[mSelectedFilters.get(i)].equals("Wishlist")) {
                             for (int j = 0; j < gameList.size(); j++) {
                                 if (gameList.get(j).tag_wishlist&& !gameListNew.contains(gameList.get(j))){
+                                    Log.d(TAG, "Adding Game2: " + gameList.get(j).name);
                                     gameListNew.add(gameList.get(j));
                                 }
                             }
                         }
                         if(mFilterItems[mSelectedFilters.get(i)].equals("Has Played")) {
                             for (int j = 0; j < gameList.size(); j++) {
-                                if (gameList.get(j).tag_owned&& !gameListNew.contains(gameList.get(j))){
+                                if (gameList.get(j).tag_played&& !gameListNew.contains(gameList.get(j))){
+                                    Log.d(TAG, "Adding Game3: " + gameList.get(j).name);
                                     gameListNew.add(gameList.get(j));
                                 }
                             }
                         }
 
                         Log.d(TAG, String.valueOf(gameListNew.size()));
-                        for (int j = 0; j < gameListNew.size(); j++) {
-                            Log.d(TAG, gameList.get(j).name);
-                        }
+//                        for (int j = 0; j < gameListNew.size(); j++) {
+//                            Log.d(TAG, gameList.get(j).name);
+//                        }
 
+                        mFilteredAdapterRV.updateGameCollection(gameListNew);
+                        mMainGameListRV.setAdapter(mFilteredAdapterRV);
 
                     }
                     mAppliedFiltersTV.setText("Tag filters: " + filterItem);
@@ -214,6 +217,7 @@ public class MainActivity extends AppCompatActivity implements GameManagerAdapte
                     mAppliedFiltersTV.setVisibility(View.GONE);
                     // Clear text view if any
                 }
+                mMainGameListRV.setAdapter(mAdapterRV);
             }
         });
 
