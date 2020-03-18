@@ -1,5 +1,6 @@
 package com.example.final_project_boardgamez.GameData;
 
+import android.content.Context;
 import android.os.AsyncTask;
 
 import com.example.final_project_boardgamez.Utilitlies.BarcodeSpiderUtils;
@@ -13,14 +14,16 @@ import java.util.List;
 public class LoadGameFromUPCTask extends AsyncTask<Void, Void, String> {
     private String mURL;
     private LoadGamesFromUPCTaskCallback mCallback;
+    private Context mContext;
 
     public interface LoadGamesFromUPCTaskCallback {
-        void onUPCLookupFinished(List<Game> game);
+        void onUPCLookupFinished(Context context, List<Game> game);
     }
 
-    LoadGameFromUPCTask(String url, LoadGamesFromUPCTaskCallback callback) {
+    LoadGameFromUPCTask(String url, Context context, LoadGamesFromUPCTaskCallback callback) {
         mURL = url;
         mCallback = callback;
+        mContext = context; // Context for handling success/error response
     }
 
 
@@ -41,6 +44,6 @@ public class LoadGameFromUPCTask extends AsyncTask<Void, Void, String> {
         if (json != null) {
             game = BarcodeSpiderUtils.parseGameJSON(json);
         }
-        mCallback.onUPCLookupFinished(game);
+        mCallback.onUPCLookupFinished(mContext, game);
     }
 }

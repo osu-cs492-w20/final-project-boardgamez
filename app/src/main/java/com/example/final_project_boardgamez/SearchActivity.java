@@ -149,64 +149,12 @@ public class SearchActivity extends AppCompatActivity implements GameManagerAdap
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode != Activity.RESULT_OK) {
-            mGamesViewModel.loadScannedGame("722301926246");  // TODO: HARDCODED UPC for testing API on emulator
-            //mGamesViewModel.loadScannedGame("019962194719");
-            mGamesViewModel.getScannedGame().observe(SearchActivity.this, new Observer<List<Game>>() {
-                @Override
-                public void onChanged(List<Game> game) {
-                    if (game != null && !game.isEmpty()) {
-                        Intent intent = new Intent(SearchActivity.this, GameDetailedActivity.class);
-                        intent.putExtra(GameDetailedActivity.EXTRA_GAME_INFO, game.get(0));
-                        startActivity(intent);
-                    }
-                }
-            });
+            //mGamesViewModel.loadScannedGame(SearchActivity.this, "722301926246");  // TODO: HARDCODED UPC for testing API on emulator
             return;
         }
         if (requestCode == BARCODE_READER_ACTIVITY_REQUEST && data != null) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(SearchActivity.this);
-            builder.setTitle("Error");
-            builder.setMessage("Barcode scanner couldn't find that game. Please try searching for it by name.");
-            builder.setNegativeButton("Dismiss", null);
-            builder.setIcon(android.R.drawable.ic_dialog_alert);
-            final AlertDialog alertDialog = builder.create();
             Barcode barcode = data.getParcelableExtra(BarcodeReaderActivity.KEY_CAPTURED_BARCODE);  // Possibly pass in "barcode"?
-            mGamesViewModel.loadScannedGame(barcode.rawValue);
-            mGamesViewModel.getScannedGame().observe(SearchActivity.this, new Observer<List<Game>>() {
-                @Override
-                public void onChanged(List<Game> game) {
-                    if (game != null && !game.isEmpty()) {
-                        if(alertDialog.isShowing()) {
-                            alertDialog.cancel();
-                        }
-                        Intent intent = new Intent(SearchActivity.this, GameDetailedActivity.class);
-                        intent.putExtra(GameDetailedActivity.EXTRA_GAME_INFO, game.get(0));
-                        startActivity(intent);
-                    }
-                    else if (game == null) {       // Handle case where no results found
-                        /*AlertDialog.Builder builder = new AlertDialog.Builder(SearchActivity.this);
-                        builder.setTitle("Error");
-                        builder.setMessage("Barcode scanner couldn't find that game. Please try searching for it by name.");
-                        builder.setNegativeButton("Dismiss", null);
-                        builder.setIcon(android.R.drawable.ic_dialog_alert);
-                        AlertDialog alertDialog = builder.create();*/
-                        //alertDialog.show();
-                        if(!alertDialog.isShowing()) {
-                            alertDialog.show();
-                        }
-
-                       /* new AlertDialog.Builder(SearchActivity.this)
-                                .setTitle("Error")
-                                .setMessage("Barcode scanner couldn't find that game. Please try searching for it by name.")
-                                .setNegativeButton("Dismiss", null)
-                                .setIcon(android.R.drawable.ic_dialog_alert)
-                                .show();*/
-                    }
-                }
-            });
-
-
-           // Toast.makeText(this, barcode.rawValue, Toast.LENGTH_LONG).show();
+            mGamesViewModel.loadScannedGame(SearchActivity.this, barcode.rawValue);
         }
     }
 
