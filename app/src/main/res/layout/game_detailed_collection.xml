@@ -74,11 +74,11 @@
                         android:id="@+id/edit_tags_btn"
                         android:layout_width="100dp"
                         android:layout_height="35dp"
+                        android:layout_marginTop="12dp"
                         android:background="@drawable/edit_tags_background"
                         android:text="Edit Tags"
                         android:textColor="@color/colorTextIcons"
                         android:padding="8dp"
-                        android:layout_margin="@dimen/fab_margin"
                         android:visibility="gone"
                         android:layout_alignParentRight="true"
                         android:layout_alignParentBottom="true"/>
