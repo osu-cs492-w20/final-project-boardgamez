@@ -110,32 +110,32 @@ public class GameDetailedActivity extends AppCompatActivity {
                 if (game != null) {
                     mGameIsSaved = true;
                     mTagsButton.setVisibility(View.VISIBLE);
-
+                    mAppliedFiltersTV.setVisibility(View.VISIBLE);
                 } else {
                     mGameIsSaved = false;
                 }
             }
         });
 
+
         String text = "Active Tags: ";
         if(mGame.tag_owned){
-            mAppliedFiltersTV.setVisibility(View.VISIBLE);
             Log.d(TAG, "Game is Owned");
             text += "Owned, ";
         }
         if(mGame.tag_wishlist){
-            mAppliedFiltersTV.setVisibility(View.VISIBLE);
             Log.d(TAG, "Game is on Wishlist");
             text += "Wishlist, ";
         }
         if(mGame.tag_played){
-            mAppliedFiltersTV.setVisibility(View.VISIBLE);
             Log.d(TAG, "Game is has been played");
             text += "Has Played";
         }
+        if(!mGame.tag_played && !mGame.tag_owned && !mGame.tag_wishlist){
+            text += "None";
+        }
 
         mAppliedFiltersTV.setText(text);
-
 
         mTagsButton = findViewById(R.id.edit_tags_btn);
         mTagsButton.setOnClickListener(new View.OnClickListener() {
@@ -264,7 +264,6 @@ public class GameDetailedActivity extends AppCompatActivity {
         return true;
     }
 
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
@@ -275,8 +274,6 @@ public class GameDetailedActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-
-
 
     private void onEditTagsClicked() {
         AlertDialog.Builder mBuilder = new AlertDialog.Builder(GameDetailedActivity.this);
